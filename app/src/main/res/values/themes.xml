@@ -1,8 +1,12 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.LocumScout" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.LocumScout" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+
+        <item name="colorPrimary">@color/black</item>
+
+        <item name="colorSecondary">@color/teal_200</item>
     </style>
 
     <style name="Theme.LocumScout" parent="Base.Theme.LocumScout" />
