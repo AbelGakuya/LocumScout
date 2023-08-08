@@ -53,8 +53,8 @@
                     android:layout_height="50dp"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/edt_background"
-                    android:drawableLeft="@drawable/baseline_email_24"
-                    android:drawableTint="@color/blue"
+                    android:drawableLeft="@drawable/ic_email"
+                    android:drawableTint="@color/black"
                     android:hint="Email"
                     android:paddingLeft="13dp" />
 
@@ -66,7 +66,7 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/edt_background"
                     android:drawableStart="@drawable/baseline_lock_24"
-                    android:drawableTint="@color/blue"
+                    android:drawableTint="@color/black"
                     android:hint="Password"
                     android:paddingLeft="13dp" />
 
@@ -76,7 +76,7 @@
                     android:layout_height="50dp"
                     android:layout_marginTop="30dp"
                     android:background="@drawable/btn_background"
-                    android:backgroundTint="@color/blue"
+                    android:backgroundTint="@color/black"
                     android:text="Login"
                     android:textColor="@color/white"
                     android:textSize="20sp" />
@@ -95,15 +95,15 @@
                     android:layout_height="wrap_content"
                     android:text="Don't have an account?"
                     android:textColor="@color/black"
-                    android:textSize="20sp" />
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/btn_signUp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sign Up here"
-                    android:textColor="@color/blue"
-                    android:textSize="20sp" />
+                    android:text="Click here to Sign Up here"
+                    android:textColor="@color/black"
+                    android:textSize="15sp" />
             </LinearLayout>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
