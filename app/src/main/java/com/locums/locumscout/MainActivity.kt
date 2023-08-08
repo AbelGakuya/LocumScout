@@ -13,10 +13,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+//        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
+      //  setSupportActionBar(toolbar)
 
-        setSupportActionBar(toolbar)
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
         bottomNavigationView.setupWithNavController(navHostFragment.findNavController())
 
