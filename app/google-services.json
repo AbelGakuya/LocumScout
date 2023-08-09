@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "733474767667",
+    "project_id": "locumscout",
+    "storage_bucket": "locumscout.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:733474767667:android:020519bfcce3f65d623446",
+        "android_client_info": {
+          "package_name": "com.locums.locumscout"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "733474767667-n3uaocnca9um924hjp1bhvgctbbb3o2j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnMKkinYtA8T9-J75H_fZWNh12PO7Bu7c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "733474767667-n3uaocnca9um924hjp1bhvgctbbb3o2j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
