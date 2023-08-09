@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content">
+
+<!--    <data>-->
+<!--        <variable-->
+<!--            name="isDoctor"-->
+<!--            type="com.hfad.daktari.model.DoctorData" />-->
+<!--    </data>-->
+
+
+    <androidx.cardview.widget.CardView
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/crd"
+        android:layout_margin="8dp"
+        app:cardElevation="80dp"
+        app:cardCornerRadius="8dp">
+
+        <RelativeLayout
+            android:id="@+id/relativelayout"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            >
+
+            <ImageView
+                android:id="@+id/docImage"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"/>
+
+<!--            android:imageUrl="@{isDoctor.imageUrl}"-->
+
+
+            <TextView
+                android:id="@+id/doc_name"
+                android:text="Placeholder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@id/docImage"
+                android:clickable="false"
+
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold|normal" />
+
+<!--            android:text="@{isDoctor.name}"-->
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:id="@+id/docBio"
+                android:textSize="20sp"
+
+                android:text="Placeholdre"
+                android:textStyle="normal"
+                android:layout_below="@id/docImage"
+                android:layout_gravity="center"
+                android:textColor="@color/black"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+<!--            android:text="@{isDoctor.bio}"-->
+
+            <Button
+                android:id="@+id/btn_choose"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_below="@id/docBio"
+                android:clickable="false"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/btn_background"
+
+                android:text="Apply"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
+
+<!--            android:text="@{`Choose ` + isDoctor.name}"-->
+
+
+
+        </RelativeLayout>
+
+
+
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

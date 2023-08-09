@@ -5,16 +5,35 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.locums.locumscout.R
+import com.locums.locumscout.databinding.FragmentHomeBinding
 
 
 class HomeFragment : Fragment() {
+
+    private lateinit var binding: FragmentHomeBinding
+   // private lateinit var recyclerView: RecyclerView
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
+
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
+        val view = binding.root
+
+        setupRecyclerView()
+
+        return view
+    }
+
+
+    private fun setupRecyclerView() = binding.locumsList.apply {
+       // runAdapter = RunAdapter()
+      //  adapter = runAdapter
+        layoutManager = LinearLayoutManager(requireContext())
     }
 
 }

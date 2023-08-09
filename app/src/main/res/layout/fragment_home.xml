@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.shift_listing_fragments.HomeFragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -16,6 +17,7 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/profile_layout"
             >
 
             <TextView
@@ -64,6 +66,14 @@
         <!--        android:textSize="25sp"/>-->
 
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/locums_list"
+            tools:listitem="@layout/locumsslist"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            />
 
 
 
