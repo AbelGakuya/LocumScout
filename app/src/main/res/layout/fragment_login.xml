@@ -98,11 +98,11 @@
                     android:textSize="15sp" />
 
                 <TextView
-                    android:id="@+id/btn_signUp"
+                    android:id="@+id/txt_signUp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Click here to Sign Up here"
-                    android:textColor="@color/black"
+                    android:textColor="@color/teal_700"
                     android:textSize="15sp" />
             </LinearLayout>
         </LinearLayout>

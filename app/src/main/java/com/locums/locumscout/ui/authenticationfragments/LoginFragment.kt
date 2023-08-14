@@ -36,6 +36,10 @@ class LoginFragment : Fragment() {
             loginUser()
         }
 
+        binding.txtSignUp.setOnClickListener {
+            findNavController().navigate(R.id.action_loginFragment_to_registrationFragment)
+        }
+
         return view
     }
 
@@ -45,8 +49,8 @@ class LoginFragment : Fragment() {
     }
 
     private fun loginUser(){
-        val email = binding.edtEmail.text.toString()
-        val password = binding.edtPassword.text.toString()
+        val email = binding.edtEmail.text.trim().toString()
+        val password = binding.edtPassword.text.trim().toString()
         if (email.isNotEmpty() && password.isNotEmpty()){
             CoroutineScope(Dispatchers.IO).launch {
                 try {
