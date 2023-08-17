@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -37,10 +38,15 @@
                 android:id="@+id/profile_image"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:adjustViewBounds="true"
-                android:src="@drawable/baseline_account_circle_24"
+                android:layout_alignParentTop="true"
                 android:scaleType="centerCrop"
-                android:layout_alignParentStart="true"/>
+                android:adjustViewBounds="true"
+                android:layout_alignParentStart="true"
+                 />
+
+<!--            android:adjustViewBounds="true"-->
+<!--            android:src="@drawable/baseline_account_circle_24"-->
+<!--            android:scaleType="centerCrop"-->
 
             <!--            <ImageView-->
             <!--                android:layout_width="100dp"-->
@@ -67,13 +73,14 @@
 
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/locums_list"
-            tools:listitem="@layout/locumsslist"
-            android:layout_marginTop="10dp"
+            android:id="@+id/shift_locums_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            />
+            android:layout_marginTop="10dp"
+            android:visibility="visible"
+            tools:listitem="@layout/shift_locums" />
+
+<!--        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
 
 
 
@@ -85,4 +92,4 @@
 
     </LinearLayout>
 
-</FrameLayout>
+</RelativeLayout>

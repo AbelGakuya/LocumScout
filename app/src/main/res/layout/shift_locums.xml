@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="wrap_content"
-    android:layout_width="wrap_content">
+    >
 
-<!--    <data>-->
-<!--        <variable-->
-<!--            name="isDoctor"-->
-<!--            type="com.hfad.daktari.model.DoctorData" />-->
-<!--    </data>-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:layout_width="wrap_content"-->
+
+    <data>
+        <variable
+            name="isHospital"
+            type="com.locums.locumscout.data.Hospital" />
+    </data>
 
 
     <androidx.cardview.widget.CardView
@@ -38,40 +40,43 @@
                 android:id="@+id/docImage"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
+                android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
-                android:adjustViewBounds="true"/>
+                android:src="@drawable/baseline_account_circle_24"
+                tools:visibility="visible" />
 
-<!--            android:imageUrl="@{isDoctor.imageUrl}"-->
+<!--            android:imageUrl="@{isHospital.imageUrl}"-->
 
 
             <TextView
                 android:id="@+id/doc_name"
-                android:text="Placeholder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="20dp"
                 android:layout_toRightOf="@id/docImage"
                 android:clickable="false"
+                android:text="@{isHospital.uid}"
 
                 android:textColor="@color/black"
                 android:textSize="20sp"
-                android:textStyle="bold|normal" />
+                android:textStyle="bold|normal"
+                tools:visibility="visible" />
 
 <!--            android:text="@{isDoctor.name}"-->
 
             <TextView
-                android:layout_marginTop="10dp"
                 android:id="@+id/docBio"
-                android:textSize="20sp"
-
-                android:text="Placeholdre"
-                android:textStyle="normal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/docImage"
                 android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:text="@{isHospital.hospitalName}"
                 android:textColor="@color/black"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:textSize="20sp"
+                android:textStyle="normal"
+                tools:visibility="visible" />
 
 <!--            android:text="@{isDoctor.bio}"-->
 
@@ -80,13 +85,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_below="@id/docBio"
-                android:clickable="false"
                 android:layout_marginTop="30dp"
                 android:background="@drawable/btn_background"
+                android:clickable="false"
 
-                android:text="Apply"
+                android:text="@{`Choose ` + isHospital.hospitalName}"
                 android:textColor="@color/white"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                tools:visibility="visible" />
 
 <!--            android:text="@{`Choose ` + isDoctor.name}"-->
 
@@ -97,4 +103,4 @@
 
 
     </androidx.cardview.widget.CardView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

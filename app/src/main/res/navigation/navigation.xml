@@ -25,6 +25,9 @@
         <action
             android:id="@+id/action_loginFragment_to_registrationFragment"
             app:destination="@id/registrationFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_shiftListFragment"
+            app:destination="@id/shiftListFragment" />
     </fragment>
     <fragment
         android:id="@+id/registrationFragment"

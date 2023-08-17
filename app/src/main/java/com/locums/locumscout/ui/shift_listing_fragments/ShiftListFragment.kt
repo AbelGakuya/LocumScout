@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.locums.locumscout.R
 import com.locums.locumscout.databinding.FragmentShiftListBinding
 
@@ -13,8 +14,7 @@ import com.locums.locumscout.databinding.FragmentShiftListBinding
 class ShiftListFragment : Fragment() {
 
     private lateinit var binding: FragmentShiftListBinding
-
-
+    private lateinit var recyclerView: RecyclerView
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -23,7 +23,10 @@ class ShiftListFragment : Fragment() {
         binding = FragmentShiftListBinding.inflate(inflater,container,false)
         val view = binding.root
 
-        setupRecyclerView()
+        recyclerView = binding.locumsList
+
+
+        //setupRecyclerView()
 
 
         return view

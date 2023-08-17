@@ -37,6 +37,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        dataBinding = true
     }
 }
 
@@ -57,6 +58,8 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
+    implementation("androidx.recyclerview:recyclerview:1.3.1")
+
     // Navigation Components
     implementation("androidx.navigation:navigation-fragment-ktx:2.5.3")
     implementation("androidx.navigation:navigation-ui-ktx:2.5.3")
@@ -68,4 +71,11 @@ dependencies {
 
     //circleimageview dependency
     implementation("de.hdodenhof:circleimageview:3.1.0")
+
+    //cardview
+    implementation("androidx.cardview:cardview:1.0.0")
+
+    //Glide
+    implementation ("com.github.bumptech.glide:glide:4.11.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.11.0")
 }

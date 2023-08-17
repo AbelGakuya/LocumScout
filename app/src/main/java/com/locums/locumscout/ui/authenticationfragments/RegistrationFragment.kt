@@ -152,7 +152,8 @@ class RegistrationFragment : Fragment() {
                 if (uid != null){
 
                     databaseReference.child(uid).setValue(doctor).await()
-                    uploadImage()
+                    uploadImageToFirebase()
+                   // uploadImage()
                     withContext(Dispatchers.Main){
                         checkLoggedInState()
                     }
@@ -173,10 +174,8 @@ class RegistrationFragment : Fragment() {
     private fun uploadImage() {
         val  uid = auth.currentUser?.uid
         val filename = UUID.randomUUID().toString()
-
-
-            storageReference = FirebaseStorage.getInstance().getReference("/images/$filename")
-            storageReference.putFile(filePath).addOnSuccessListener {
+        storageReference = FirebaseStorage.getInstance().getReference("/images/$filename")
+        storageReference.putFile(filePath).addOnSuccessListener {
 //            hideProgressBar()
 
                 Toast.makeText(context, "Profile Successfully Updated", Toast.LENGTH_SHORT).show()
@@ -200,6 +199,28 @@ class RegistrationFragment : Fragment() {
 
 
 
+    }
+
+
+    private suspend fun uploadImageToFirebase(){
+        val firstName = binding.firstName.text.trim().toString()
+        val lastName = binding.lastName.text.trim().toString()
+        val username = firstName + " " + lastName
+        val storageRef = FirebaseStorage.getInstance().reference.child("user_images/${auth.currentUser?.uid}.jpg")
+        storageRef.putFile(filePath).await()
+        val imageUrl = storageRef.downloadUrl.await().toString()
+
+        //store user data in Firestore using coroutines
+        val userMap = mapOf("name" to username, "imageUrl" to imageUrl)
+        withContext(Dispatchers.IO){
+            val userRef = auth.currentUser?.uid?.let {
+                FirebaseFirestore.getInstance()
+                    .collection("doctor_users")
+                    .document(it)
+            }
+
+            userRef?.set(userMap)?.await() ?: ""
+        }
     }
 
     private fun selectImage() {
