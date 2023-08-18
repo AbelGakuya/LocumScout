@@ -57,4 +57,9 @@
         android:name="com.locums.locumscout.ui.user_profile_fragments.UserProfileFragment"
         android:label="fragment_user_profile"
         tools:layout="@layout/fragment_user_profile" />
+    <fragment
+        android:id="@+id/userShiftsFragment"
+        android:name="com.locums.locumscout.ui.user_profile_fragments.UserShiftsFragment"
+        android:label="fragment_user_shifts"
+        tools:layout="@layout/fragment_user_shifts" />
 </navigation>

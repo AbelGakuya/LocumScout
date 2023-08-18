@@ -81,14 +81,12 @@
                 android:layout_marginTop="30dp"
                 android:background="@drawable/btn_background"
                 android:clickable="false"
-                android:text="@{`Choose ` + isHospital.hospitalName}"
-                android:textColor="@color/black"
+                android:text=""
+                android:textColor="@color/white"
                 android:textSize="15sp"
                 tools:visibility="visible" />
 
 <!--            android:text="@{`Choose ` + isDoctor.name}"-->
-
-
 
         </RelativeLayout>
 

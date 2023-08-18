@@ -30,13 +30,13 @@ class ShiftListFragment : Fragment() {
 
     private lateinit var binding: FragmentShiftListBinding
     private lateinit var recyclerView: RecyclerView
-
+    private lateinit var mAdapter: HospitalsAdapter
     private lateinit var viewModel: FirebaseViewModel
     private lateinit var viewModelShift: ShiftsViewModel
-    lateinit var auth: FirebaseAuth
-    private lateinit var mDatabase1: DataSnapshot
-    private lateinit var mAdapter: HospitalsAdapter
-    var hospitalArrayList: ArrayList<Hospital>? = null
+    //lateinit var auth: FirebaseAuth
+   // private lateinit var mDatabase1: DataSnapshot
+
+ //   var hospitalArrayList: ArrayList<Hospital>? = null
 
 
     override fun onCreateView(
@@ -46,7 +46,6 @@ class ShiftListFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentShiftListBinding.inflate(inflater,container,false)
         val view = binding.root
-
         recyclerView = binding.locumsList
 
 
@@ -67,7 +66,7 @@ class ShiftListFragment : Fragment() {
 
         mAdapter = HospitalsAdapter{
                 selectedItem ->
-            findNavController().navigate(R.id.action_homeFragment_to_shiftListFragment)
+            findNavController().navigate(R.id.action_shiftListFragment_to_shiftDetailsFragment)
         }
         recyclerView.adapter = mAdapter
 
@@ -80,18 +79,18 @@ class ShiftListFragment : Fragment() {
         viewModelShift.fetchFirebaseData()
 
 
-        auth = FirebaseAuth.getInstance()
-        val uid = auth.currentUser?.uid
-        //getDocDetails(uid)
+//        auth = FirebaseAuth.getInstance()
+//        val uid = auth.currentUser?.uid
+//        //getDocDetails(uid)
 
 
     }
 
-    private fun setupRecyclerView() = binding.locumsList.apply {
-        // runAdapter = RunAdapter()
-        //  adapter = runAdapter
-        layoutManager = LinearLayoutManager(requireContext())
-    }
+//    private fun setupRecyclerView() = binding.locumsList.apply {
+//        // runAdapter = RunAdapter()
+//        //  adapter = runAdapter
+//        layoutManager = LinearLayoutManager(requireContext())
+//    }
 
 
 }

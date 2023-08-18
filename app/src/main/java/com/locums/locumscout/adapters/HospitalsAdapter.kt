@@ -43,6 +43,7 @@ class HospitalsAdapter(
         : RecyclerView.ViewHolder(binding.root){
        fun bind(item: Hospital){
            binding.hospitalName.text = item.hospitalName
+           binding.btnChoose.text = "Apply to ${item.hospitalName}"
            Glide.with(binding.hospitalImage.context)
                .load(item.imageUrl)
                .into(binding.hospitalImage)

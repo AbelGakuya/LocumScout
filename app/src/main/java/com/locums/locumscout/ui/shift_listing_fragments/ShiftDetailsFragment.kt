@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.locums.locumscout.R
+import com.locums.locumscout.databinding.FragmentShiftDetailsBinding
 
 
 class ShiftDetailsFragment : Fragment() {
+    private lateinit var binding: FragmentShiftDetailsBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
