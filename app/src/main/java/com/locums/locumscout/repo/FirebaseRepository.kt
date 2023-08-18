@@ -3,23 +3,27 @@ package com.locums.locumscout.repo
 import android.widget.Toast
 import androidx.core.content.ContentProviderCompat.requireContext
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
 import com.locums.locumscout.data.Hospital
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 class FirebaseRepository {
-    private val firestore = FirebaseDatabase.getInstance()
+    private val firestore = FirebaseFirestore.getInstance()
 
     //Fetch Firebase Data
     suspend fun getFirebaseData(): List<Hospital>{
         val data = mutableListOf<Hospital>()
 
         try {
-            val snapshot = firestore.getReference("hospital").get().await()
-            for (hospitalSnapshot in snapshot.children){
-                val hospital = hospitalSnapshot.getValue(Hospital::class.java)
-                data.add(hospital!!)
+            val snapshot = firestore.collection("hospital_users").get().await()
+            for (hospitalSnapshot in snapshot.documents){
+                val hospitalName = hospitalSnapshot.getString("hospitalName")
+                val imageUrl = hospitalSnapshot.getString("imageUrl")
+                val uid = hospitalSnapshot.getString("uid")
+
+                data.add(Hospital(hospitalName,imageUrl,uid))
             }
         } catch (e: Exception){
 //            withContext(Dispatchers.Main) {

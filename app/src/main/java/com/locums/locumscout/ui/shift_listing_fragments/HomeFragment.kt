@@ -21,6 +21,8 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.locums.locumscout.R
 import com.locums.locumscout.adapters.HospitalsAdapter
+import com.locums.locumscout.adapters.TestAdapter
+import com.locums.locumscout.data.Abel
 import com.locums.locumscout.data.Doctor
 import com.locums.locumscout.data.Hospital
 import com.locums.locumscout.data.Profile
@@ -45,12 +47,13 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var viewModel: FirebaseViewModel
     private lateinit var viewModelShift: ShiftsViewModel
+    private lateinit var mAdapter:  HospitalsAdapter
     lateinit var auth: FirebaseAuth
     private lateinit var mDatabase1: DataSnapshot
-    private lateinit var mAdapter:  HospitalsAdapter
-    var hospitalArrayList: ArrayList<Hospital>? = null
+    private lateinit var recyclerView: RecyclerView
 
-   private lateinit var recyclerView: RecyclerView
+
+    var hospitalArrayList: ArrayList<Hospital>? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -68,11 +71,26 @@ class HomeFragment : Fragment() {
 //       updateUIi()
 
 //        hospitalArrayList = ArrayList()
-//        getHospitalData()
-//        mAdapter = HospitalsAdapter(requireActivity(), hospitalArrayList!!)
+//     //   getHospitalData()
+//
+//
+//        val abelzArrayList : ArrayList<Abel> = ArrayList()
+//        val firstName = "Abel"
+//        val lastName = "Mwas"
+//        val abel = Abel(firstName, lastName)
+//        val first = "Jonte"
+//        val last = "Gaks"
+//        val jon = Abel(first,last)
+//        abelzArrayList.add(jon)
+//        abelzArrayList.add(abel)
+//        testAdapter = TestAdapter(abelzArrayList)
+//
+//     //   mAdapter = HospitalsAdapter(requireActivity(), hospitalArrayList!!)
+//
 //        recyclerView = binding.shiftLocumsList
 //        recyclerView.setHasFixedSize(true)
-//        recyclerView.adapter = mAdapter
+//        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+//        recyclerView.adapter = testAdapter
        // setupRecyclerView()
 
         return view
@@ -138,25 +156,38 @@ class HomeFragment : Fragment() {
 //        layoutManager = LinearLayoutManager(requireContext())
 //    }
 
-    private fun getHospitalData() = CoroutineScope(Dispatchers.IO).launch {
-        try {
-            mDatabase1 = FirebaseDatabase.getInstance().getReference("hospital").get().await()
-            for (hospitalSnapshot in mDatabase1.children) {
-                val hospital = hospitalSnapshot.getValue(Hospital::class.java)
-                hospitalArrayList?.add(hospital!!)
+    private fun getHospitalData()  {
+        CoroutineScope(Dispatchers.IO).launch {
+            val data : ArrayList<Hospital> = ArrayList()
+
+            try {
+                mDatabase1 = FirebaseDatabase.getInstance().getReference("hospitals").get().await()
+                for (hospitalSnapshot in mDatabase1.children) {
+                    val hospital = hospitalSnapshot.getValue(Hospital::class.java)
+                    hospitalArrayList?.add(hospital!!)
+                    data.add(hospital!!)
+                }
+
+
+
+
+//                withContext(Dispatchers.Main) {
+//                    mAdapter = HospitalsAdapter(hospitalArrayList!!)
+//                    recyclerView.adapter = testAdapter
+//
+//                    //     Toast.makeText(requireContext(), "Oya!!", Toast.LENGTH_SHORT).show()
+//                    //  navigateToShiftDetails()
+//                }
+
+            } catch (e: Exception) {
+
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
+                }
             }
 
-            withContext(Dispatchers.Main) {
-                recyclerView.adapter = mAdapter
-                //     Toast.makeText(requireContext(), "Oya!!", Toast.LENGTH_SHORT).show()
-              //  navigateToShiftDetails()
-            }
 
-        } catch (e: Exception) {
 
-            withContext(Dispatchers.Main) {
-                Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
-            }
         }
 
     }
