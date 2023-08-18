@@ -4,28 +4,22 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.locums.locumscout.data.Hospital
 //import com.locums.locumscout.databinding.LocumsListBinding
 import com.locums.locumscout.databinding.ShiftLocumsBinding
 
-class HospitalsAdapter(var c: Context, var hospitalsList: ArrayList<Hospital>)
+class HospitalsAdapter(
+                       private val onItemClick:(Hospital) -> Unit)
     :RecyclerView.Adapter<HospitalsAdapter.HospitalsViewHolder>() {
 
-    private lateinit var mListener: onItemClickListener
+    private val data = mutableListOf<Hospital>()
 
-    // lateinit var binding: DoctorsListBinding
-
-
-    interface onItemClickListener{
-        fun onItemClick(position: Int)
+    fun updateData(newData: List<Hospital>){
+        data.clear()
+        data.addAll(newData)
+        notifyDataSetChanged()
     }
-
-    fun setOnItemClickListener(listener: onItemClickListener){
-        mListener = listener
-    }
-
-
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HospitalsViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -33,26 +27,28 @@ class HospitalsAdapter(var c: Context, var hospitalsList: ArrayList<Hospital>)
         //val view = layoutInflater.inflate(R.layout.topics, parent, false) as CardView
         val binding = ShiftLocumsBinding.inflate(layoutInflater,parent,false)
 
-        return HospitalsViewHolder(binding, mListener)
+        return HospitalsViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
-        return hospitalsList.size
+        return data.size
     }
 
     override fun onBindViewHolder(holder: HospitalsViewHolder, position: Int) {
-        val item = hospitalsList[position]
-        holder.binding.isHospital = item
+        val item = data[position]
+        holder.bind(item)
     }
 
-    class HospitalsViewHolder(val binding: ShiftLocumsBinding, listener: onItemClickListener)
+    inner class HospitalsViewHolder(val binding: ShiftLocumsBinding)
         : RecyclerView.ViewHolder(binding.root){
-        init {
+       fun bind(item: Hospital){
+           binding.hospitalName.text = item.hospitalName
+           Glide.with(binding.hospitalImage.context)
+               .load(item.imageUrl)
+               .into(binding.hospitalImage)
 
-            itemView.setOnClickListener {
-                listener.onItemClick(adapterPosition)
-            }
-        }
+           binding.root.setOnClickListener { onItemClick(item) }
+       }
 
 
     }

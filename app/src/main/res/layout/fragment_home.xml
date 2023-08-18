@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -44,52 +44,49 @@
                 android:layout_alignParentStart="true"
                  />
 
-<!--            android:adjustViewBounds="true"-->
-<!--            android:src="@drawable/baseline_account_circle_24"-->
-<!--            android:scaleType="centerCrop"-->
-
-            <!--            <ImageView-->
-            <!--                android:layout_width="100dp"-->
-            <!--                android:layout_height="100dp"-->
-            <!--                android:src="@drawable/profile_pic"-->
-            <!--                android:layout_alignParentEnd="true"-->
-            <!--                android:layout_marginBottom="15dp"/>-->
-
-
         </RelativeLayout>
-
-
-        <!--    <TextView-->
-        <!--        android:id="@+id/title"-->
-        <!--        android:layout_width="match_parent"-->
-        <!--        android:layout_marginTop="15dp"-->
-        <!--        android:layout_height="match_parent"-->
-        <!--        android:text="Welcome to Doctora"-->
-        <!--        android:layout_marginLeft="5dp"-->
-        <!--        android:layout_marginRight="5dp"-->
-        <!--        android:textStyle="bold"-->
-        <!--        android:textColor="@color/white"-->
-        <!--        android:textSize="25sp"/>-->
-
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/shift_locums_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginTop="10dp"
-            android:visibility="visible"
             tools:listitem="@layout/shift_locums" />
-
-<!--        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
-
-
-
-
-        <!--        android:padding="5dp"-->
-        <!--            android:layout_marginStart="200dp"-->
-        <!--            android:layout_marginBottom="15dp"/>-->
-
 
     </LinearLayout>
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--            android:adjustViewBounds="true"-->
+    <!--            android:src="@drawable/baseline_account_circle_24"-->
+    <!--            android:scaleType="centerCrop"-->
+
+    <!--            <ImageView-->
+    <!--                android:layout_width="100dp"-->
+    <!--                android:layout_height="100dp"-->
+    <!--                android:src="@drawable/profile_pic"-->
+    <!--                android:layout_alignParentEnd="true"-->
+    <!--                android:layout_marginBottom="15dp"/>-->
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/title"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_marginTop="15dp"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        android:text="Welcome to Doctora"-->
+    <!--        android:layout_marginLeft="5dp"-->
+    <!--        android:layout_marginRight="5dp"-->
+    <!--        android:textStyle="bold"-->
+    <!--        android:textColor="@color/white"-->
+    <!--        android:textSize="25sp"/>-->
+
+
+
+
+    <!--        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
+
+
+
+
+    <!--        android:padding="5dp"-->
+    <!--            android:layout_marginStart="200dp"-->
+    <!--            android:layout_marginBottom="15dp"/>-->

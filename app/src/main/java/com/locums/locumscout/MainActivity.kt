@@ -2,6 +2,7 @@ package com.locums.locumscout
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toolbar
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -21,5 +22,16 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setupWithNavController(navHostFragment.findNavController())
 
         bottomNavigationView.setOnNavigationItemReselectedListener { /* No Operation*/ }
+
+        navHostFragment.findNavController()
+            .addOnDestinationChangedListener{
+                    _,destination,_ ->
+                when(destination.id){
+                    R.id.homeFragment, R.id.shiftListFragment, R.id.userProfileFragment ->
+                        bottomNavigationView.visibility = View.VISIBLE
+
+                    else -> bottomNavigationView.visibility = View.GONE
+                }
+            }
     }
 }

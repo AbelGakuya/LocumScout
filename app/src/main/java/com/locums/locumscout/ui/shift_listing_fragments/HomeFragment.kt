@@ -10,6 +10,7 @@ import androidx.core.net.toUri
 import androidx.core.view.get
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.get
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,7 +28,10 @@ import com.locums.locumscout.databinding.FragmentHomeBinding
 import com.locums.locumscout.other.Constants.first_name
 import com.locums.locumscout.other.Constants.last_name
 import com.locums.locumscout.other.Constants.name
+import com.locums.locumscout.repo.FirebaseRepository
 import com.locums.locumscout.viewModels.FirebaseViewModel
+import com.locums.locumscout.viewModels.ShiftsViewModel
+import com.locums.locumscout.viewModels.ShiftsViewModelFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -40,6 +44,7 @@ class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
     private lateinit var viewModel: FirebaseViewModel
+    private lateinit var viewModelShift: ShiftsViewModel
     lateinit var auth: FirebaseAuth
     private lateinit var mDatabase1: DataSnapshot
     private lateinit var mAdapter:  HospitalsAdapter
@@ -56,34 +61,9 @@ class HomeFragment : Fragment() {
         val view = binding.root
 
 
-        viewModel = ViewModelProvider(this).get(FirebaseViewModel::class.java)
-
-       auth = FirebaseAuth.getInstance()
-       val uid = auth.currentUser?.uid
-       //getDocDetails(uid)
-
-        GlobalScope.launch(Dispatchers.Main) {
-            viewModel.fetchProfileData(uid!!)
-
-            viewModel.profileData.observe(viewLifecycleOwner, Observer {
-                profileData ->
-                profileData?.let {
-                    //Load and display the user's image using Glide
-                    Glide.with(this@HomeFragment)
-                        .load(profileData.imageUrl)
-                        .error(R.drawable.baseline_lock_24)
-                        .placeholder(R.drawable.baseline_person_24)
-                        .into(binding.profileImage)
-
-                    binding.hello.text = "Jambo ${profileData.name}"
-
-                }
-            })
-        }
 
 
 
-        recyclerView = binding.shiftLocumsList
 
 //       updateUIi()
 
@@ -100,17 +80,63 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupRecyclerView()
+        //setupRecyclerView()
+
+        val repository = FirebaseRepository()
+        viewModel = ViewModelProvider(this).get(FirebaseViewModel::class.java)
+        viewModelShift = ViewModelProvider(this, ShiftsViewModelFactory(repository)).get(ShiftsViewModel::class.java)
+        recyclerView = binding.shiftLocumsList
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        mAdapter = HospitalsAdapter{
+                selectedItem ->
+            findNavController().navigate(R.id.action_homeFragment_to_shiftListFragment)
+        }
+        recyclerView.adapter = mAdapter
+
+        viewModelShift.firebaseData.observe(
+            viewLifecycleOwner){
+                data ->
+            mAdapter.updateData(data)
+        }
+
+        viewModelShift.fetchFirebaseData()
+
+
+        auth = FirebaseAuth.getInstance()
+        val uid = auth.currentUser?.uid
+        //getDocDetails(uid)
+
+        GlobalScope.launch(Dispatchers.Main) {
+            viewModel.fetchProfileData(uid!!)
+
+            viewModel.profileData.observe(viewLifecycleOwner, Observer {
+                    profileData ->
+                profileData?.let {
+                    //Load and display the user's image using Glide
+                    Glide.with(this@HomeFragment)
+                        .load(profileData.imageUrl)
+                        .error(R.drawable.baseline_lock_24)
+                        .placeholder(R.drawable.baseline_person_24)
+                        .into(binding.profileImage)
+
+                    binding.hello.text = "Jambo ${profileData.name}"
+
+                }
+            })
+        }
+
+
     }
 
 
-    private fun setupRecyclerView() = binding.shiftLocumsList.apply {
-        hospitalArrayList = ArrayList()
-        getHospitalData()
-        mAdapter = HospitalsAdapter(requireActivity(), hospitalArrayList!!)
-        adapter = mAdapter
-        layoutManager = LinearLayoutManager(requireContext())
-    }
+//    private fun setupRecyclerView() = binding.shiftLocumsList.apply {
+//        hospitalArrayList = ArrayList()
+//        getHospitalData()
+//        mAdapter = HospitalsAdapter(requireActivity(), hospitalArrayList!!)
+//        adapter = mAdapter
+//        layoutManager = LinearLayoutManager(requireContext())
+//    }
 
     private fun getHospitalData() = CoroutineScope(Dispatchers.IO).launch {
         try {
@@ -123,7 +149,7 @@ class HomeFragment : Fragment() {
             withContext(Dispatchers.Main) {
                 recyclerView.adapter = mAdapter
                 //     Toast.makeText(requireContext(), "Oya!!", Toast.LENGTH_SHORT).show()
-                navigateToShiftDetails()
+              //  navigateToShiftDetails()
             }
 
         } catch (e: Exception) {
@@ -259,19 +285,19 @@ class HomeFragment : Fragment() {
 
 
 
-    private fun navigateToShiftDetails() {
-        mAdapter.setOnItemClickListener(object : HospitalsAdapter.onItemClickListener{
-            override fun onItemClick(position: Int) {
-                val hospital = hospitalArrayList?.get(position)
-//                val token = ?.token
-//                sharedViewModelToken.saveContent(token)
-//                if (doctor != null) {
-//                    sharedViewModel2.saveContent(doctor)
-//                }
-                findNavController().navigate(R.id.action_homeFragment_to_shiftListFragment)
-            }
-        })
-    }
+//    private fun navigateToShiftDetails() {
+//        mAdapter.setOnItemClickListener(object : HospitalsAdapter.onItemClickListener{
+//            override fun onItemClick(position: Int) {
+//                val hospital = hospitalArrayList?.get(position)
+////                val token = ?.token
+////                sharedViewModelToken.saveContent(token)
+////                if (doctor != null) {
+////                    sharedViewModel2.saveContent(doctor)
+////                }
+//                findNavController().navigate(R.id.action_homeFragment_to_shiftListFragment)
+//            }
+//        })
+//    }
 }
 
 
