@@ -17,13 +17,15 @@ class FirebaseRepository {
         val data = mutableListOf<Hospital>()
 
         try {
-            val snapshot = firestore.collection("hospital_users").get().await()
+            val snapshot = firestore.collection("vacancies").get().await()
             for (hospitalSnapshot in snapshot.documents){
                 val hospitalName = hospitalSnapshot.getString("hospitalName")
                 val imageUrl = hospitalSnapshot.getString("imageUrl")
                 val uid = hospitalSnapshot.getString("uid")
+                val title = hospitalSnapshot.getString("jobTitle")
 
-                data.add(Hospital(hospitalName,imageUrl,uid))
+
+                data.add(Hospital(hospitalName,title,imageUrl,uid))
             }
         } catch (e: Exception){
 //            withContext(Dispatchers.Main) {

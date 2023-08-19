@@ -1,6 +1,7 @@
 package com.locums.locumscout.ui.shift_listing_fragments
 
 import android.os.Bundle
+import android.os.Handler
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -43,6 +44,12 @@ import kotlinx.coroutines.withContext
 
 
 class HomeFragment : Fragment() {
+
+    private lateinit var handler: Handler
+    private var currentPosition = 0
+    private val scrollDelay = 3000L
+
+
 
     private lateinit var binding: FragmentHomeBinding
     private lateinit var viewModel: FirebaseViewModel
@@ -104,7 +111,7 @@ class HomeFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(FirebaseViewModel::class.java)
         viewModelShift = ViewModelProvider(this, ShiftsViewModelFactory(repository)).get(ShiftsViewModel::class.java)
         recyclerView = binding.shiftLocumsList
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL,false)
 
         mAdapter = HospitalsAdapter{
                 selectedItem ->
@@ -117,6 +124,11 @@ class HomeFragment : Fragment() {
                 data ->
             mAdapter.updateData(data)
         }
+
+        handler = Handler()
+        startAutoScroll()
+
+
 
         viewModelShift.fetchFirebaseData()
 
@@ -145,6 +157,29 @@ class HomeFragment : Fragment() {
         }
 
 
+    }
+
+    private fun startAutoScroll() {
+        handler.postDelayed({
+            if (currentPosition < mAdapter.itemCount - 1) {
+                currentPosition++
+            } else {
+                currentPosition = 0
+            }
+
+            recyclerView.smoothScrollToPosition(currentPosition)
+            startAutoScroll()
+        }, scrollDelay)
+    }
+
+    override fun onDestroyView() {
+        handler.removeCallbacksAndMessages(null)
+        super.onDestroyView()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        handler.removeCallbacksAndMessages(null)
     }
 
 
