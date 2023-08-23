@@ -16,10 +16,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 import com.locums.locumscout.R
 import com.locums.locumscout.adapters.HospitalsAdapter
 import com.locums.locumscout.adapters.TestAdapter
@@ -51,7 +53,8 @@ class HomeFragment : Fragment() {
 
 
 
-    private lateinit var binding: FragmentHomeBinding
+    private  var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
     private lateinit var viewModel: FirebaseViewModel
     private lateinit var viewModelShift: ShiftsViewModel
     private lateinit var mAdapter:  HospitalsAdapter
@@ -67,8 +70,9 @@ class HomeFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
 
-        binding = FragmentHomeBinding.inflate(inflater, container, false)
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val view = binding.root
+
 
 
 
@@ -148,7 +152,10 @@ class HomeFragment : Fragment() {
                         .load(profileData.imageUrl)
                         .error(R.drawable.baseline_lock_24)
                         .placeholder(R.drawable.baseline_person_24)
+                        .apply(RequestOptions().dontAnimate())
                         .into(binding.profileImage)
+
+                    name = profileData.name
 
                     binding.hello.text = "Jambo ${profileData.name}"
 
@@ -156,8 +163,64 @@ class HomeFragment : Fragment() {
             })
         }
 
+        binding.profileImage.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_userProfileFragment)
+        }
+
+        retrieveFCMToken()
 
     }
+
+    fun retrieveFCMToken(){
+        // Get the current user's UID
+        val currentUserUid = FirebaseAuth.getInstance().currentUser?.uid
+        // Retrieve the FCM token
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val fcmToken = task.result
+
+                // Store the FCM token in Firestore under the user's document
+                if (currentUserUid != null) {
+                    val firestore = FirebaseFirestore.getInstance()
+                    val userDocument = firestore.collection("doctor_users").document(currentUserUid)
+
+                    userDocument.update("fcmToken", fcmToken)
+                        .addOnSuccessListener {
+                            // Token updated successfully
+                        }
+                        .addOnFailureListener {
+                            // Handle token update failure
+                        }
+                }
+            } else {
+                // Handle token retrieval failure
+            }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        retrieveFCMToken()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        retrieveFCMToken()
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
+
+
+
+
+    override fun onStop() {
+        super.onStop()
+        _binding = null
+    }
+
 
     private fun startAutoScroll() {
         handler.postDelayed({
@@ -180,6 +243,7 @@ class HomeFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         handler.removeCallbacksAndMessages(null)
+        _binding = null
     }
 
 

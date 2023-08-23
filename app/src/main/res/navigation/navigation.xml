@@ -13,7 +13,11 @@
         <action
             android:id="@+id/action_homeFragment_to_shiftListFragment"
             app:destination="@id/shiftListFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.locums.locumscout.ui.authenticationfragments.LoginFragment"
@@ -29,6 +33,7 @@
             android:id="@+id/action_loginFragment_to_shiftListFragment"
             app:destination="@id/shiftListFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/registrationFragment"
         android:name="com.locums.locumscout.ui.authenticationfragments.RegistrationFragment"
@@ -45,18 +50,31 @@
         tools:layout="@layout/fragment_shift_list" >
         <action
             android:id="@+id/action_shiftListFragment_to_shiftDetailsFragment"
-            app:destination="@id/shiftDetailsFragment" />
+            app:destination="@id/shiftDetailsFragment"
+            app:popUpTo="@id/shiftListFragment"
+            app:popUpToInclusive="false" />
     </fragment>
+
     <fragment
         android:id="@+id/shiftDetailsFragment"
         android:name="com.locums.locumscout.ui.shift_listing_fragments.ShiftDetailsFragment"
         android:label="fragment_shift_details"
-        tools:layout="@layout/fragment_shift_details" />
+        tools:layout="@layout/fragment_shift_details">
+
+
+
+    </fragment>
+
+
     <fragment
         android:id="@+id/userProfileFragment"
         android:name="com.locums.locumscout.ui.user_profile_fragments.UserProfileFragment"
         android:label="fragment_user_profile"
-        tools:layout="@layout/fragment_user_profile" />
+        tools:layout="@layout/fragment_user_profile" >
+        <action
+            android:id="@+id/action_userProfileFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
     <fragment
         android:id="@+id/userShiftsFragment"
         android:name="com.locums.locumscout.ui.user_profile_fragments.UserShiftsFragment"

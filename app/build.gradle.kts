@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.gms.google-services")
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
@@ -81,4 +82,14 @@ dependencies {
 
     //google play services
     implementation ("com.google.android.gms:play-services-location:18.0.0")
+
+    //Firebase
+    implementation ("com.google.firebase:firebase-core:20.0.0")
+    implementation ("com.google.firebase:firebase-messaging:23.0.0")
+
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation ("com.squareup.okhttp3:okhttp:4.9.1")
+
+
 }

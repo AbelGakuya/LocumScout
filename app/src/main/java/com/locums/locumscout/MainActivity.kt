@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
 //        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
       //  setSupportActionBar(toolbar)
 
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView) as BottomNavigationView
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
         bottomNavigationView.setupWithNavController(navHostFragment.findNavController())
 
@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
             .addOnDestinationChangedListener{
                     _,destination,_ ->
                 when(destination.id){
-                    R.id.homeFragment, R.id.shiftListFragment, R.id.userProfileFragment ->
+                    R.id.homeFragment, R.id.shiftDetailsFragment, R.id.shiftListFragment, R.id.userProfileFragment ->
                         bottomNavigationView.visibility = View.VISIBLE
 
                     else -> bottomNavigationView.visibility = View.GONE

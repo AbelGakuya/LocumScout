@@ -21,7 +21,7 @@ class FirebaseRepository {
             for (hospitalSnapshot in snapshot.documents){
                 val hospitalName = hospitalSnapshot.getString("hospitalName")
                 val imageUrl = hospitalSnapshot.getString("imageUrl")
-                val uid = hospitalSnapshot.getString("uid")
+                val uid = hospitalSnapshot.getString("hospitalId")
                 val title = hospitalSnapshot.getString("jobTitle")
 
 
