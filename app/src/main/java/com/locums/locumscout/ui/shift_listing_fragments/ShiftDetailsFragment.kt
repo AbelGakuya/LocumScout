@@ -1,9 +1,9 @@
 package com.locums.locumscout.ui.shift_listing_fragments
 
 import android.app.AlertDialog
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,31 +14,36 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.RemoteMessage
 import com.google.firebase.storage.FirebaseStorage
+import com.google.gson.Gson
 import com.locums.locumscout.R
-import com.locums.locumscout.data.ApiClient
-import com.locums.locumscout.data.NotificationRequest
-import com.locums.locumscout.data.NotificationResponse
+//import com.locums.locumscout.data.ApiClient
+import com.locums.locumscout.data.NotificationData
+import com.locums.locumscout.data.PushNotification
 import com.locums.locumscout.databinding.FragmentShiftDetailsBinding
 import com.locums.locumscout.other.Constants.coverLetterDownloadUrl
 import com.locums.locumscout.other.Constants.hospitalId
 import com.locums.locumscout.other.Constants.name
 import com.locums.locumscout.other.Constants.resumeDownloadUrl
+import com.locums.locumscout.retrofit.RetrofitInstance
 import com.locums.locumscout.viewModels.SharedViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import java.io.OutputStream
-import java.net.HttpURLConnection
-import java.net.URL
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.FormBody
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import java.io.IOException
 
 
 class ShiftDetailsFragment : Fragment() {
@@ -49,6 +54,8 @@ class ShiftDetailsFragment : Fragment() {
     private lateinit var btnSubmitApplication: Button
     lateinit var auth: FirebaseAuth
     val sharedViewModel2: SharedViewModel by activityViewModels()
+
+    val TAG = "ShiftDetails"
 
   //  private val args: ShiftDetailsFragmentArgs by navArgs()
     override fun onCreateView(
@@ -74,7 +81,7 @@ class ShiftDetailsFragment : Fragment() {
 
       auth = FirebaseAuth.getInstance()
 
-        return view
+      return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -88,7 +95,7 @@ class ShiftDetailsFragment : Fragment() {
     }
 
     // Define the function to retrieve hospital's FCM token
-    private fun getHospitalFcmToken(hospitalId: String?, callback: (String?) -> Unit) {
+    private fun getHospitalFcmTokenN(hospitalId: String?, callback: (String?) -> Unit) {
         val firestore = FirebaseFirestore.getInstance()
         CoroutineScope(Dispatchers.IO).launch {
 
@@ -107,6 +114,9 @@ class ShiftDetailsFragment : Fragment() {
         }
 
     }
+
+
+
 
     private fun openAdditionalInfoDialog(){
 
@@ -131,9 +141,12 @@ class ShiftDetailsFragment : Fragment() {
 
         btnSubmitApplication.setOnClickListener {
 
-            CoroutineScope(Dispatchers.IO).launch {
-                submitApplication()
-            }
+            getHospitalFcmToken(hospitalId!!)
+//            CoroutineScope(Dispatchers.IO).launch {
+//             //   getHospitalFcmToken()
+//               // submitApplication()
+//                getHospitalFcmToken(hospitalId)
+//            }
 
             dialog.dismiss()
 
@@ -257,136 +270,275 @@ class ShiftDetailsFragment : Fragment() {
         CoroutineScope(Dispatchers.IO).launch {
             val uid = auth.currentUser?.uid
             val userMap = mapOf( "Applicants_name" to name, "Applicant's_uid" to uid,
-                    "Applicants coverLetter" to coverLetterDownloadUrl, "Applicant's resume" to resumeDownloadUrl)
-                withContext(Dispatchers.IO) {
+                    "Applicants coverLetter" to coverLetterDownloadUrl, "Applicant's resume" to resumeDownloadUrl, "hospitalId" to hospitalId)
+
                     val userRef = auth.currentUser?.uid?.let {
                         FirebaseFirestore.getInstance()
-                            .collection("application")
+                            .collection("applications")
                             .document(it)
                     }
                     userRef?.set(userMap)?.await() ?: ""
-                    sendNotification2()
-                }
+
+            withContext(Dispatchers.Main){
+                Toast.makeText(requireContext(), "Application made successfully", Toast.LENGTH_LONG).show()
+            }
+
+
+            //getHospitalFcmToken(hospitalId,uid)
+
+
+          // triggerCloudFunction()
+                    //sendNotification2()
+
         }
     }
 
+    private fun getHospitalFcmToken(hospitalId: String?) {
+        val firestore = FirebaseFirestore.getInstance()
+        CoroutineScope(Dispatchers.IO).launch {
+            val hospitalRef = firestore.collection("hospitals").document(hospitalId!!)
+            hospitalRef.get().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val hospitalData = task.result?.data
+                    val fcmToken = hospitalData?.get("fcmToken") as? String
 
-    fun sendNotification(){
-        getHospitalFcmToken(hospitalId) { fcmToken ->
-            if (fcmToken != null) {
-                //Toast.makeText(requireContext(),"token Successfully!", Toast.LENGTH_LONG).show()
-                val notificationData = """
-                    {
-                        "title": "New Application",
-                        "body": "A healthcare worker has applied for a vacancy.",
-                        "tokens": ["$fcmToken"]
-                    }
-                """.trimIndent()
-                //  val serverUrl = "http://localhost:3000" // Replace with your server URL
-                val serverUrl =
-                    "http://192.168.1.193:3000" // Replace with your actual local IP address and port
+                    if (!fcmToken.isNullOrEmpty()){
+                        val title =  "New Application"
+                        val message = "You have a new application from $name"
+                        val applicantId = auth.currentUser?.uid
+                        PushNotification(
+                            NotificationData(title, message, applicantId),
+                            fcmToken
+                        ).also {
+                            sendNotification(it)
+                        }
 
-                val url = URL("$serverUrl/send-notification")
-                val connection = url.openConnection() as HttpURLConnection
-                Toast.makeText(requireContext(),"token Successfully!", Toast.LENGTH_LONG).show()
-                try {
-                    connection.requestMethod = "POST"
-                    connection.setRequestProperty("Content-Type", "application/json")
-                    connection.setRequestProperty("Accept", "application/json")
-                    connection.doOutput = true
-
-                    val os: OutputStream = connection.outputStream
-                    os.write(notificationData.toByteArray(Charsets.UTF_8))
-                    os.close()
-
-                    val responseCode = connection.responseCode
-                    Toast.makeText(requireContext(), "try Successfully!", Toast.LENGTH_LONG)
-                        .show()
-                    if (responseCode == HttpURLConnection.HTTP_OK) {
-                        // Notification sent successfully
-                        val response =
-                            connection.inputStream.bufferedReader().use { it.readText() }
-                        // Toast.makeText(requireContext(),"Notification sent successfully: $response", Toast.LENGTH_LONG).show()
-                        // println("Notification sent successfully: $response")
-                        Toast.makeText(
-                            requireContext(),
-                            "Notification Successfully!",
-                            Toast.LENGTH_LONG
-                        ).show()
                     } else {
-                        // Handle error
-                        Toast.makeText(
-                            requireContext(),
-                            "Notification not sent ",
-                            Toast.LENGTH_LONG
-                        ).show()
-                        // println("Error sending notification: HTTP $responseCode")
-                        Toast.makeText(
-                            requireContext(),
-                            "token not Successfully!",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        activity?.runOnUiThread {
+                            Toast.makeText(requireContext(), "No token", Toast.LENGTH_LONG).show()
+                        }
                     }
-                } catch (e: Exception) {
-                    Toast.makeText(
-                        requireContext(),
-                        "Notification not Successfully! $e",
-                        Toast.LENGTH_LONG
-                    ).show()
-                } finally {
-                    connection.disconnect()
-                }
 
+
+                    //Toast.makeText(requireContext(),"token Successfully!", Toast.LENGTH_LONG).show()
+                    // Pass the token to the callback function
+                } else {
+                    // Pass null if there's an error
+                }
+            }.addOnFailureListener{
+                exception ->
+                activity?.runOnUiThread {
+                    Toast.makeText(requireContext(), " firestore query failur $exception", Toast.LENGTH_LONG).show()
+                }
             }
         }
 
     }
 
-    fun sendNotification2(){
-        getHospitalFcmToken(hospitalId) { fcmToken ->
-            if (fcmToken != null) {
-                val title = "Notification Title"
-                val body = "Notification Body"
+    private fun sendNotification1(fcmToken: String?,applicationId:String?) {
+        val message = RemoteMessage.Builder(fcmToken!!)
+            .setMessageId(applicationId!!)
+            .addData("title", "New Application")
+            .addData("body", "You have a new application from $name")
+            .build()
 
-                val tokens = listOf(fcmToken)
+        try {
+            FirebaseMessaging.getInstance().send(message)
+            activity?.runOnUiThread {
+                Toast.makeText(requireContext(), " notification sent succesfully", Toast.LENGTH_LONG).show()
+            }
 
-                val request = NotificationRequest(title, body, tokens)
+        } catch (e: Exception){
+            activity?.runOnUiThread {
+                Toast.makeText(requireContext(), " notification sending failure $e", Toast.LENGTH_LONG).show()
+            }
+        }
 
-                // Use a coroutine to perform the network request in a background thread
-                viewLifecycleOwner.lifecycleScope.launch {
-                    try {
-                        val response = withContext(Dispatchers.IO) {
-                            ApiClient.apiService.sendNotification(request)
-                        }
-                        handleResponse(response)
-                    } catch (e: Exception) {
-                        handleError(e)
-                    }
+    }
+
+    private fun sendNotification(notification: PushNotification)
+    = CoroutineScope(Dispatchers.IO).launch{
+        try {
+            val response = RetrofitInstance.api.postNotification(notification)
+            if (response.isSuccessful){
+                submitApplication()
+                if (response.isSuccessful){
+                    suspend { Log.d(TAG, "Response: ${Gson().toJson(response)}")  }
+
+                } else {
+                    Log.e(TAG, response.errorBody().toString())
                 }
             } else {
-                // Handle the case when the FCM token is null
+                Log.e(TAG, response.errorBody().toString())
+            }
+        } catch (e: Exception){
+            activity?.runOnUiThread {
+                Toast.makeText(requireContext(), " notification not sent succesfully catch block  ${e}",
+                    Toast.LENGTH_LONG).show()
             }
         }
     }
 
-    private fun handleResponse(response: NotificationResponse) {
-        // Handle the successful response, e.g., update UI
+    private fun triggerCloudFunction(){
 
-        Toast.makeText(
-            requireContext(),
-            "Notification Successfully! $response",
-            Toast.LENGTH_LONG
-        ).show()
+            val httpClient = OkHttpClient()
+            val requestBody = FormBody.Builder()
+                .add("hospitalId", hospitalId!!)
+                .add("doctorName", "Abel")
+                .build()
+            val request = Request.Builder()
+                .url("https://us-central1-locumscout.cloudfunctions.net/sendNotification")
+                .post(requestBody)
+                .build()
+            httpClient.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    activity?.runOnUiThread {
+                        if (response.isSuccessful) {
+
+
+                            Toast.makeText(
+                                requireContext(),
+                                "Response succesful",
+                                Toast.LENGTH_LONG
+                            )
+                                .show()
+
+
+                        } else {
+                            val errorBody = response.body?.string()
+                            Toast.makeText(requireContext(),"Response not succesful $errorBody", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
+            })
+
+
     }
 
-    private fun handleError(exception: Exception) {
-        // Handle the error, e.g., show an error message
-        Toast.makeText(
-            requireContext(),
-            "Notification Successfully! $exception",
-            Toast.LENGTH_LONG
-        ).show()
-    }
+//
+//    fun sendNotification(){
+//        getHospitalFcmToken(hospitalId) { fcmToken ->
+//            if (fcmToken != null) {
+//                //Toast.makeText(requireContext(),"token Successfully!", Toast.LENGTH_LONG).show()
+//                val notificationData = """
+//                    {
+//                        "title": "New Application",
+//                        "body": "A healthcare worker has applied for a vacancy.",
+//                        "tokens": ["$fcmToken"]
+//                    }
+//                """.trimIndent()
+//                //  val serverUrl = "http://localhost:3000" // Replace with your server URL
+//                val serverUrl =
+//                    "http://192.168.1.193:3000" // Replace with your actual local IP address and port
+//
+//                val url = URL("$serverUrl/send-notification")
+//                val connection = url.openConnection() as HttpURLConnection
+//                Toast.makeText(requireContext(),"token Successfully!", Toast.LENGTH_LONG).show()
+//                try {
+//                    connection.requestMethod = "POST"
+//                    connection.setRequestProperty("Content-Type", "application/json")
+//                    connection.setRequestProperty("Accept", "application/json")
+//                    connection.doOutput = true
+//
+//                    val os: OutputStream = connection.outputStream
+//                    os.write(notificationData.toByteArray(Charsets.UTF_8))
+//                    os.close()
+//
+//                    val responseCode = connection.responseCode
+//                    Toast.makeText(requireContext(), "try Successfully!", Toast.LENGTH_LONG)
+//                        .show()
+//                    if (responseCode == HttpURLConnection.HTTP_OK) {
+//                        // Notification sent successfully
+//                        val response =
+//                            connection.inputStream.bufferedReader().use { it.readText() }
+//                        // Toast.makeText(requireContext(),"Notification sent successfully: $response", Toast.LENGTH_LONG).show()
+//                        // println("Notification sent successfully: $response")
+//                        Toast.makeText(
+//                            requireContext(),
+//                            "Notification Successfully!",
+//                            Toast.LENGTH_LONG
+//                        ).show()
+//                    } else {
+//                        // Handle error
+//                        Toast.makeText(
+//                            requireContext(),
+//                            "Notification not sent ",
+//                            Toast.LENGTH_LONG
+//                        ).show()
+//                        // println("Error sending notification: HTTP $responseCode")
+//                        Toast.makeText(
+//                            requireContext(),
+//                            "token not Successfully!",
+//                            Toast.LENGTH_LONG
+//                        ).show()
+//                    }
+//                } catch (e: Exception) {
+//                    Toast.makeText(
+//                        requireContext(),
+//                        "Notification not Successfully! $e",
+//                        Toast.LENGTH_LONG
+//                    ).show()
+//                } finally {
+//                    connection.disconnect()
+//                }
+//
+//            }
+//        }
+//
+//    }
+//
+//    fun sendNotification2(){
+//        getHospitalFcmToken(hospitalId) { fcmToken ->
+//            if (fcmToken != null) {
+//                val title = "Notification Title"
+//                val body = "Notification Body"
+//
+//                val tokens = listOf(fcmToken)
+//
+//                val request = NotificationRequest(title, body, tokens)
+//
+//                // Use a coroutine to perform the network request in a background thread
+//                viewLifecycleOwner.lifecycleScope.launch {
+//                    try {
+//                        val response = withContext(Dispatchers.IO) {
+//                            ApiClient.apiService.sendNotification(request)
+//                        }
+//                        handleResponse(response)
+//                    } catch (e: Exception) {
+//                        handleError(e)
+//                    }
+//                }
+//            } else {
+//                // Handle the case when the FCM token is null
+//            }
+//        }
+//    }
+//
+//
+//
+//    private fun handleResponse(response: NotificationResponse) {
+//        // Handle the successful response, e.g., update UI
+//
+//        Toast.makeText(
+//            requireContext(),
+//            "Notification Successfully! $response",
+//            Toast.LENGTH_LONG
+//        ).show()
+//    }
+//
+//    private fun handleError(exception: Exception) {
+//        // Handle the error, e.g., show an error message
+//        Toast.makeText(
+//            requireContext(),
+//            "Notification Successfully! $exception",
+//            Toast.LENGTH_LONG
+//        ).show()
+//    }
+
+
 
     override fun onDestroy() {
         super.onDestroy()
