@@ -163,6 +163,10 @@ class HomeFragment : Fragment() {
             })
         }
 
+        binding.hello.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_notificationsFragment)
+        }
+
         binding.profileImage.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_userProfileFragment)
         }

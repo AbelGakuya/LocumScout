@@ -7,4 +7,6 @@ object Constants {
     var resumeDownloadUrl = ""
     var coverLetterDownloadUrl = ""
     var hospitalId : String? = ""
+    const val ACTION_SHOW_APPLICANTS_DETAIL_FRAGMENT="ACTION_SHOW_APPLICANTS_DETAIL_FRAGMENT"
+
 }

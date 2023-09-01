@@ -141,6 +141,7 @@ class ShiftDetailsFragment : Fragment() {
 
         btnSubmitApplication.setOnClickListener {
 
+
             getHospitalFcmToken(hospitalId!!)
 //            CoroutineScope(Dispatchers.IO).launch {
 //             //   getHospitalFcmToken()
@@ -306,8 +307,9 @@ class ShiftDetailsFragment : Fragment() {
                         val title =  "New Application"
                         val message = "You have a new application from $name"
                         val applicantId = auth.currentUser?.uid
+
                         PushNotification(
-                            NotificationData(title, message, applicantId),
+                            NotificationData(title, message, applicantId,hospitalId),
                             fcmToken
                         ).also {
                             sendNotification(it)
