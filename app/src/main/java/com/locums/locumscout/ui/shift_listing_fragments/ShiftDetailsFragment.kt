@@ -56,6 +56,7 @@ class ShiftDetailsFragment : Fragment() {
     val sharedViewModel2: SharedViewModel by activityViewModels()
 
     val TAG = "ShiftDetails"
+    var endDate: String? = ""
 
   //  private val args: ShiftDetailsFragmentArgs by navArgs()
     override fun onCreateView(
@@ -70,6 +71,7 @@ class ShiftDetailsFragment : Fragment() {
         sharedViewModel2.content.observe(viewLifecycleOwner, {
                 content ->
             hospitalId = content.uid
+            endDate = content.endDate
             binding.hospitalName.text = content.hospitalName
             binding.jobTitle.text = content.title
             binding.btnApply.text = "Apply to ${content.hospitalName}"
@@ -270,8 +272,11 @@ class ShiftDetailsFragment : Fragment() {
     private fun submitApplication() {
         CoroutineScope(Dispatchers.IO).launch {
             val uid = auth.currentUser?.uid
-            val userMap = mapOf( "Applicants_name" to name, "Applicant's_uid" to uid,
-                    "Applicants coverLetter" to coverLetterDownloadUrl, "Applicant's resume" to resumeDownloadUrl, "hospitalId" to hospitalId)
+            val userMap = mapOf( "Applicants_name" to name,
+                "Applicant's_uid" to uid,
+                "Applicants coverLetter" to coverLetterDownloadUrl,
+                "Applicant's resume" to resumeDownloadUrl,
+                "hospitalId" to hospitalId)
 
                     val userRef = auth.currentUser?.uid?.let {
                         FirebaseFirestore.getInstance()
@@ -309,7 +314,7 @@ class ShiftDetailsFragment : Fragment() {
                         val applicantId = auth.currentUser?.uid
 
                         PushNotification(
-                            NotificationData(title, message, applicantId,hospitalId),
+                            NotificationData(title, message,applicantId,hospitalId,endDate),
                             fcmToken
                         ).also {
                             sendNotification(it)

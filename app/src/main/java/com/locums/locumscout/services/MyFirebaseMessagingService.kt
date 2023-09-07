@@ -38,11 +38,12 @@ class MyFirebaseMessagingService :
         val timestamp = System.currentTimeMillis()
 
         //create the incoming NotificationData
-        val incomingNotificationData = IncomingNotificationData(notificationTitle,notificationMessage,timestamp, hospitalId)
+        val incomingNotificationData = IncomingNotificationData(notificationTitle,notificationMessage,timestamp, applicantId)
 
         //insert notification to firestore
         val firestore = FirebaseFirestore.getInstance()
-        val notificationsCollection = firestore.collection("doctor_notifications")
+        val notificationsCollection = firestore.collection("doctor_users")
+            .document(applicantId!!).collection("notifications")
 
         notificationsCollection.add(incomingNotificationData)
             .addOnSuccessListener {

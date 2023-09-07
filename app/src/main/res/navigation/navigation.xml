@@ -23,6 +23,9 @@
         <action
             android:id="@+id/action_homeFragment_to_notificationsFragment"
             app:destination="@id/notificationsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_activeLocumsFragment"
+            app:destination="@id/activeLocumsFragment" />
     </fragment>
 
     <fragment
@@ -96,5 +99,19 @@
         android:id="@+id/notificationsFragment"
         android:name="com.locums.locumscout.ui.notifications_fragment.NotificationsFragment"
         android:label="fragment_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_notifications" >
+        <action
+            android:id="@+id/action_notificationsFragment_to_locumFragment"
+            app:destination="@id/locumFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/locumFragment"
+        android:name="com.locums.locumscout.ui.notifications_fragment.LocumFragment"
+        android:label="fragment_locum"
+        tools:layout="@layout/fragment_locum" />
+    <fragment
+        android:id="@+id/activeLocumsFragment"
+        android:name="com.locums.locumscout.ui.shift_listing_fragments.ActiveLocumsFragment"
+        android:label="fragment_active_locums"
+        tools:layout="@layout/fragment_active_locums" />
 </navigation>

@@ -1,13 +1,9 @@
 package com.locums.locumscout.repo
 
-import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
+import com.locums.locumscout.data.ActiveLocum
 import com.locums.locumscout.data.Hospital
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 
 class FirebaseRepository {
     private val firestore = FirebaseFirestore.getInstance()
@@ -23,9 +19,10 @@ class FirebaseRepository {
                 val imageUrl = hospitalSnapshot.getString("imageUrl")
                 val uid = hospitalSnapshot.getString("hospitalId")
                 val title = hospitalSnapshot.getString("jobTitle")
+                val endDate = hospitalSnapshot.getString("endDate")
 
 
-                data.add(Hospital(hospitalName,title,imageUrl,uid))
+                data.add(Hospital(hospitalName,title,imageUrl,uid,endDate))
             }
         } catch (e: Exception){
 //            withContext(Dispatchers.Main) {
@@ -33,4 +30,28 @@ class FirebaseRepository {
             }
         return data
         }
+
+    suspend fun getActiveLocums(uid: String?): List<ActiveLocum>{
+        val data = mutableListOf<ActiveLocum>()
+
+        try {
+            val snapshot = firestore.collection("doctor_users")
+                .document(uid!!).collection("ActiveLocums").get().await()
+            for (locumSnapshot in snapshot.documents){
+                val applicantName = locumSnapshot.getString("applicant_name")
+                val hospitalName = locumSnapshot.getString("hospital_name")
+                val endDate = locumSnapshot.getString("end_date")
+
+                data.add(ActiveLocum(applicantName,hospitalName,endDate))
+            }
+        } catch (e: Exception){
+//            withContext(Dispatchers.Main) {
+//                Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
+        }
+        return data
+    }
+
+
+
+
     }
