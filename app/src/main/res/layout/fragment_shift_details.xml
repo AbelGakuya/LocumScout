@@ -15,7 +15,6 @@
         android:layout_height="100dp"
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"
-
         android:src="@drawable/baseline_account_circle_24"
         tools:visibility="visible" />
 

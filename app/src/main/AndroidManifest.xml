@@ -33,6 +33,8 @@
             </intent-filter>
         </service>
 
+        <service android:name=".services.LocumBackgroundService"/>
+
         <activity
             android:name=".MainActivity"
             android:exported="true">

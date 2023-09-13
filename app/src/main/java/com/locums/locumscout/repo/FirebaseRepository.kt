@@ -40,7 +40,7 @@ class FirebaseRepository {
             for (locumSnapshot in snapshot.documents){
                 val applicantName = locumSnapshot.getString("applicant_name")
                 val hospitalName = locumSnapshot.getString("hospital_name")
-                val endDate = locumSnapshot.getString("end_date")
+                val endDate = locumSnapshot.getString("end_date")?.toLong()
 
                 data.add(ActiveLocum(applicantName,hospitalName,endDate))
             }

@@ -3,6 +3,7 @@ package com.locums.locumscout.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.work.WorkManager
 import com.google.firebase.firestore.FirebaseFirestore
 import com.locums.locumscout.data.Profile
 import kotlinx.coroutines.Dispatchers
@@ -12,6 +13,8 @@ import kotlinx.coroutines.tasks.await
 
 class FirebaseViewModel:  ViewModel() {
     private val db = FirebaseFirestore.getInstance()
+
+
 
     private val _profileData = MutableLiveData<Profile>()
 
@@ -33,4 +36,6 @@ class FirebaseViewModel:  ViewModel() {
 
         }
     }
+
+
 }
