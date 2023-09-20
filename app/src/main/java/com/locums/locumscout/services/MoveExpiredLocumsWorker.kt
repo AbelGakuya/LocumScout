@@ -15,26 +15,45 @@ Worker(context,params){
     override fun doWork(): Result {
 
         try {
-
+            val uid = FirebaseAuth.getInstance().currentUser?.uid
+            if (uid == null){
+                Log.e("FirestoreWorker", "No user")
+                return Result.failure()
+            }
 
             val db = FirebaseFirestore.getInstance()
+            Log.d("Firestore", "starting query")
             val currentDate = Date()
-            val uid = FirebaseAuth.getInstance().currentUser?.uid
+
             val locumCollection = db.collection("doctor_users").document(uid!!)
                 .collection("ActiveLocums")
 
-            locumCollection.whereLessThanOrEqualTo("end_date", currentDate)
+            locumCollection
+                //.whereLessThanOrEqualTo("end_date", currentDate)
                 .get()
-                .addOnSuccessListener { documents ->
-                    for (document in documents) {
-                        db.collection("doctor_users").document(uid!!)
-                            .collection("completedLocum").add(document.data)
+                .addOnSuccessListener { querySnapshot ->
 
-                        locumCollection.document(document.id).delete()
-
+                    Log.d("Firestore", "successful ${querySnapshot.size()}")
+                    for (document in querySnapshot.documents) {
+                        val endDate = document.getTimestamp("end_date")?.toDate()
+                        if (endDate != null && endDate <= currentDate){
+                            db.collection("doctor_users").document(uid!!)
+                                .collection("completedLocum").add(document.data!!)
+                                .addOnSuccessListener {
+                                    Log.e("Firestore", "Transefered to completed")
+                                    db.collection("doctor_users").document(uid!!)
+                                        .collection("ActiveLocums").document(document.id).delete().addOnSuccessListener {
+                                            Log.e("Firestore", "deletted from active")
+                                        }
+                                }
+                                .addOnFailureListener {  }
+                        }
                     }
                 }
-                .addOnFailureListener { }
+                .addOnFailureListener {
+                    exception ->
+                    Log.d("Firestorefail", "Error querying ${exception.message}")
+                }
 
             Log.d("FirestoreWorker", "Worker is running")
             return Result.success()

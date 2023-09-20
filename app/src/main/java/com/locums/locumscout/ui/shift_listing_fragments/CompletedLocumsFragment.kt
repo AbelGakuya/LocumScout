@@ -10,18 +10,22 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.locums.locumscout.R
-import com.locums.locumscout.databinding.FragmentActiveLocumsBinding
+import com.locums.locumscout.adapters.CompletedLocumsAdapter
+import com.locums.locumscout.databinding.FragmentCompletedLocumsBinding
 import com.locums.locumscout.repo.FirebaseRepository
 import com.locums.locumscout.viewModels.ShiftsViewModel
 import com.locums.locumscout.viewModels.ShiftsViewModelFactory
 import com.locums.locumscouth.adapters.ActiveLocumsAdapter
 
-class ActiveLocumsFragment : Fragment() {
 
-    private lateinit var binding: FragmentActiveLocumsBinding
+class CompletedLocumsFragment : Fragment() {
+    private lateinit var binding: FragmentCompletedLocumsBinding
+
     private lateinit var viewModel: ShiftsViewModel
+
     private lateinit var recyclerView: RecyclerView
-    private lateinit var mAdapter: ActiveLocumsAdapter
+
+    private lateinit var mAdapter: CompletedLocumsAdapter
 
 
     override fun onCreateView(
@@ -29,10 +33,8 @@ class ActiveLocumsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentActiveLocumsBinding.inflate(inflater,container,false)
+        binding = FragmentCompletedLocumsBinding.inflate(inflater,container,false)
         val view = binding.root
-
-
         return view
     }
 
@@ -43,36 +45,24 @@ class ActiveLocumsFragment : Fragment() {
         // viewModel = ViewModelProvider(this).get(LocumsViewModel::class.java)
         viewModel = ViewModelProvider(this, ShiftsViewModelFactory(repository)).get(ShiftsViewModel::class.java)
 
-
         recyclerView = binding.activeLocumsList
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        mAdapter = ActiveLocumsAdapter{
+        mAdapter = CompletedLocumsAdapter{
                 selectedItem ->
             // sharedViewModel2.saveContent(selectedItem)
             //   findNavController().navigate(R.id.action_shiftListFragment_to_shiftDetailsFragment)
         }
         recyclerView.adapter = mAdapter
 
-        val emptyStateLayout = view.findViewById<View>(R.id.emptyStateLayout)
-
 
         val uid = FirebaseAuth.getInstance().currentUser?.uid
-        viewModel.fetchLocums(uid)
+        viewModel.fetchCompletedLocums(uid)
 
-        viewModel.locumsLiveData.observe(
+        viewModel.completedLocumsLiveData.observe(
             viewLifecycleOwner){
                 data ->
-            if (data.isEmpty()) {
-                // No data available, show the placeholder
-                recyclerView.visibility = View.GONE
-                emptyStateLayout.visibility = View.VISIBLE
-            } else {
-                // Data is available, show the RecyclerView
-                recyclerView.visibility = View.VISIBLE
-                emptyStateLayout.visibility = View.GONE
-                mAdapter.updateActiveLocums(data)
-            }
+            mAdapter.updateActiveLocums(data)
         }
     }
 

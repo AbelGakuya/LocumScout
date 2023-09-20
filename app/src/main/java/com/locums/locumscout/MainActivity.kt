@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.locums.locumscout.other.Constants.ACTION_SHOW_APPLICANTS_DETAIL_FRAGMENT
-import com.locums.locumscout.services.LocumBackgroundService
+//import com.locums.locumscout.services.LocumBackgroundService
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +34,9 @@ class MainActivity : AppCompatActivity() {
             .addOnDestinationChangedListener{
                     _,destination,_ ->
                 when(destination.id){
-                    R.id.homeFragment, R.id.shiftDetailsFragment, R.id.shiftListFragment, R.id.userProfileFragment ->
+                    R.id.homeFragment, R.id.shiftDetailsFragment, R.id.shiftListFragment,
+                    R.id.userProfileFragment, R.id.ordersFragment,
+                    R.id.notificationsFragment, R.id.notificationsDetailsFragment ->
                         bottomNavigationView.visibility = View.VISIBLE
 
                     else -> bottomNavigationView.visibility = View.GONE

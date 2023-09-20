@@ -9,8 +9,12 @@
 
     <item
         android:id="@+id/shiftListFragment"
-        android:icon="@drawable/baseline_lock_24"
+        android:icon="@drawable/baseline_work_24"
         android:title="Shifts"/>
+
+    <item android:id="@+id/ordersFragment"
+        android:icon="@drawable/baseline_assignment_24"
+        android:title="Orders"/>
 
 
     <item

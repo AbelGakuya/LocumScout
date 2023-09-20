@@ -35,6 +35,12 @@ class NotificationAdapter(
         position: Int
     ) {
         val notification = notificationsList[position]
+        if (!notification.read){
+            holder.binding.unreadIndicator.visibility = View.VISIBLE
+        } else {
+            holder.binding.unreadIndicator.visibility = View.GONE
+        }
+
        holder.bind(notification)
     }
 
@@ -54,7 +60,7 @@ class NotificationAdapter(
         fun bind(item: IncomingNotificationData){
             binding.messageTextView.text = item.message
             binding.titleTextView.text = item.title
-            binding.timeTextView.text = item.timeStamp.toString()
+            binding.timeTextView.text = item.timeAgo
 
             binding.root.setOnClickListener { onItemClick(item) }
         }

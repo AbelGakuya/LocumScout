@@ -2,6 +2,7 @@ package com.locums.locumscout.ui.shift_listing_fragments
 
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -139,6 +140,7 @@ class HomeFragment : Fragment() {
 
         auth = FirebaseAuth.getInstance()
         val uid = auth.currentUser?.uid
+        checkUnreadNotifications(uid!!)
         //getDocDetails(uid)
 
         GlobalScope.launch(Dispatchers.Main) {
@@ -157,7 +159,7 @@ class HomeFragment : Fragment() {
 
                     name = profileData.name
 
-                    binding.hello.text = "Jambo ${profileData.name}"
+                    binding.hello.text = "Hi ${profileData.name}"
 
                 }
             })
@@ -168,7 +170,7 @@ class HomeFragment : Fragment() {
         }
 
         binding.profileImage.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_activeLocumsFragment)
+            findNavController().navigate(R.id.action_homeFragment_to_userProfileFragment)
         }
 
         binding.notifications.setOnClickListener {
@@ -176,6 +178,30 @@ class HomeFragment : Fragment() {
         }
 
         retrieveFCMToken()
+
+    }
+
+    fun checkUnreadNotifications(uid: String?){
+        val db = FirebaseFirestore.getInstance()
+
+
+        db.collection("doctor_users")
+            .document(uid!!).collection("notifications")
+            .whereEqualTo("read",false)
+            .get()
+            .addOnSuccessListener {
+                querySnapshot ->
+
+                Log.e("Unread", "size is ${querySnapshot.size()}")
+                val unreadNotificationsCount = querySnapshot.size()
+                updateNotificationIconBadge(unreadNotificationsCount)
+            }
+    }
+
+    private fun updateNotificationIconBadge(unreadNotificationsCount: Int) {
+
+        val notificationIcon = binding.notificationIcon
+        notificationIcon.text = unreadNotificationsCount.toString()
 
     }
 

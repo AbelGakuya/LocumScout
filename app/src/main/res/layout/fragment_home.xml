@@ -54,6 +54,22 @@
                 android:layout_marginStart="280dp"
                 android:contentDescription="TODO" />
 
+            <TextView
+                android:id="@+id/notification_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/notification_icon_background"
+                android:gravity="center"
+                android:text="0"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:padding="6dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="300dp"
+                android:layout_gravity ="end"
+                android:layout_marginBottom="8dp"
+                android:visibility="visible"/>
+
         </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView

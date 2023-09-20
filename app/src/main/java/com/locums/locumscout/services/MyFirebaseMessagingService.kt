@@ -17,8 +17,6 @@ import com.locums.locumscout.MainActivity
 import com.locums.locumscout.R
 import com.locums.locumscout.data.IncomingNotificationData
 import com.locums.locumscout.other.Constants.ACTION_SHOW_APPLICANTS_DETAIL_FRAGMENT
-import java.lang.Exception
-import java.util.Random
 
 private const val CHANNEL_ID = "my_channel"
 class MyFirebaseMessagingService :
@@ -35,15 +33,18 @@ class MyFirebaseMessagingService :
         val notificationMessage = notificationData["message"]
         val applicantId = notificationData["applicantId"]
         val hospitalId = notificationData["hospitalId"]
-        val timestamp = System.currentTimeMillis()
+        val timestamp = com.google.firebase.Timestamp.now()
+        val read: Boolean = false
 
-        //create the incoming NotificationData
-        val incomingNotificationData = IncomingNotificationData(notificationTitle,notificationMessage,timestamp, applicantId)
-
-        //insert notification to firestore
         val firestore = FirebaseFirestore.getInstance()
         val notificationsCollection = firestore.collection("doctor_users")
             .document(applicantId!!).collection("notifications")
+
+        val notificationId = notificationsCollection.document().id
+        //create the incoming NotificationData
+        val incomingNotificationData = IncomingNotificationData(notificationTitle,notificationMessage,timestamp,applicantId, notificationId, read)
+
+        //insert notification to firestore
 
         notificationsCollection.add(incomingNotificationData)
             .addOnSuccessListener {

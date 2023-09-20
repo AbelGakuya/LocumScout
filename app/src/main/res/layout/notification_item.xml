@@ -6,6 +6,12 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <View
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:id="@+id/unread_indicator"
+        android:background="@drawable/black_dot"/>
+
     <TextView
         android:id="@+id/titleTextView"
         android:layout_width="wrap_content"

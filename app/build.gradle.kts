@@ -95,5 +95,12 @@ dependencies {
     //WorkManager
     implementation("androidx.work:work-runtime:2.8.1")
 
+    //Viewpager
+    implementation("androidx.viewpager2:viewpager2:1.0.0")
+    implementation("com.google.android.material:material:1.9.0")
+
+    //timeAgo
+  //  implementation("com.github.marlonlom:timeago:4.0.2")
+
 
 }

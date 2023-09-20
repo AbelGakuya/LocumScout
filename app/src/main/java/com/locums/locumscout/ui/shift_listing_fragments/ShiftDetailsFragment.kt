@@ -27,6 +27,7 @@ import com.locums.locumscout.data.NotificationData
 import com.locums.locumscout.data.PushNotification
 import com.locums.locumscout.databinding.FragmentShiftDetailsBinding
 import com.locums.locumscout.other.Constants.coverLetterDownloadUrl
+import com.locums.locumscout.other.Constants.endDate
 import com.locums.locumscout.other.Constants.hospitalId
 import com.locums.locumscout.other.Constants.name
 import com.locums.locumscout.other.Constants.resumeDownloadUrl
@@ -56,7 +57,7 @@ class ShiftDetailsFragment : Fragment() {
     val sharedViewModel2: SharedViewModel by activityViewModels()
 
     val TAG = "ShiftDetails"
-    var endDate: String? = ""
+
 
   //  private val args: ShiftDetailsFragmentArgs by navArgs()
     override fun onCreateView(
@@ -71,7 +72,7 @@ class ShiftDetailsFragment : Fragment() {
         sharedViewModel2.content.observe(viewLifecycleOwner, {
                 content ->
             hospitalId = content.uid
-            endDate = content.endDate
+            endDate = content.endDate.toString()
             binding.hospitalName.text = content.hospitalName
             binding.jobTitle.text = content.title
             binding.btnApply.text = "Apply to ${content.hospitalName}"

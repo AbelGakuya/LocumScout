@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.locums.locumscout.data.ActiveLocum
+import com.locums.locumscout.data.CompletedLocum
 import com.locums.locumscout.data.Hospital
 import com.locums.locumscout.repo.FirebaseRepository
 import kotlinx.coroutines.Dispatchers
@@ -38,6 +39,16 @@ class ShiftsViewModel(private val
         viewModelScope.launch {
             val locums = repository.getActiveLocums(hospitalId)
             _locumsLiveData.postValue(locums)
+        }
+    }
+
+    private val _completedLocumsLiveData: MutableLiveData<List<CompletedLocum>> = MutableLiveData()
+    val completedLocumsLiveData: LiveData<List<CompletedLocum>> = _completedLocumsLiveData
+
+    fun fetchCompletedLocums(hospitalId: String?){
+        viewModelScope.launch {
+            val locums = repository.getCompletedLocums(hospitalId)
+            _completedLocumsLiveData.postValue(locums)
         }
     }
 
