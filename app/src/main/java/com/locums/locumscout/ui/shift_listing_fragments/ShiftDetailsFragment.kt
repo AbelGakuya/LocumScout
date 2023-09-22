@@ -282,6 +282,7 @@ class ShiftDetailsFragment : Fragment() {
                 "Applicants coverLetter" to coverLetterDownloadUrl,
                 "Applicant's resume" to resumeDownloadUrl,
                 "vacancyId" to vacancyId,
+                "application_status" to false,
                 "hospitalId" to hospitalId)
 
                     val userRef = auth.currentUser?.uid?.let {
