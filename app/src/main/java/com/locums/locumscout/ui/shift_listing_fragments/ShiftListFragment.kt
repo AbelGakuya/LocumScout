@@ -75,11 +75,24 @@ class ShiftListFragment : Fragment() {
             findNavController().navigate(R.id.action_shiftListFragment_to_shiftDetailsFragment)
         }
         recyclerView.adapter = mAdapter
+        // Show ProgressBar while loading data
+        val emptyStateLayout = view.findViewById<View>(R.id.emptyStateLayout)
+        binding.loadingIndicator.visibility = View.VISIBLE
 
         viewModelShift.firebaseData.observe(
             viewLifecycleOwner){
                 data ->
-            mAdapter.updateData(data)
+            binding.loadingIndicator.visibility = View.GONE
+            if (data.isEmpty()) {
+                // No data available, show the placeholder
+                recyclerView.visibility = View.GONE
+                emptyStateLayout.visibility = View.VISIBLE
+            } else {
+                // Data is available, show the RecyclerView
+                recyclerView.visibility = View.VISIBLE
+                emptyStateLayout.visibility = View.GONE
+                mAdapter.updateData(data)
+            }
         }
 
         viewModelShift.fetchFirebaseData()

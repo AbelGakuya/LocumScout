@@ -1,89 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="10dp"
-    tools:context=".ui.shift_listing_fragments.ShiftDetailsFragment">
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp"
+    app:cardUseCompatPadding="true">
 
-    <!-- TODO: Update blank fragment layout -->
-    <ImageView
-        android:id="@+id/hospitalImage"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:adjustViewBounds="true"
-        android:scaleType="centerCrop"
-        android:src="@drawable/baseline_account_circle_24"
-        tools:visibility="visible" />
-
-    <!--            android:imageUrl="@{isHospital.imageUrl}"-->
-
-
-    <TextView
-        android:id="@+id/hospitalName"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginLeft="20dp"
-        android:layout_below="@id/hospitalImage"
-        android:clickable="false"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        android:textStyle="bold|normal"
-        tools:visibility="visible" />
-
-    <TextView
-        android:id="@+id/jobTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginLeft="20dp"
-        android:layout_below="@id/hospitalName"
-        android:clickable="false"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        android:textStyle="bold|normal"
-        tools:visibility="visible" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="10dp"
+        tools:context=".ui.shift_listing_fragments.ShiftDetailsFragment">
 
 
+            <!-- Hospital Image -->
+            <ImageView
+                android:id="@+id/hospitalImage"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/baseline_account_circle_24" />
 
-    <TextView
-        android:id="@+id/jobDescription"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginLeft="20dp"
-        android:layout_below="@id/hospitalName"
-        android:clickable="false"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        android:textStyle="bold|normal"
-        tools:visibility="visible" />
-    <!--            android:text="@{isDoctor.name}"-->
+            <!-- Hospital Name -->
+            <TextView
+                android:id="@+id/hospitalName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="20dp"
+                android:clickable="false"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold|normal" />
+
+            <!-- Job Title -->
+            <TextView
+                android:id="@+id/jobTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="20dp"
+                android:clickable="false"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold|normal" />
+
+            <!-- Job Description -->
+            <TextView
+                android:id="@+id/jobDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="20dp"
+                android:clickable="false"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold|normal" />
+
+            <!-- Apply Button -->
+            <Button
+                android:id="@+id/btn_apply"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/btn_background"
+                android:clickable="false"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="15sp" />
 
 
-    <!--            android:text="@{isDoctor.bio}"-->
 
-    <Button
-        android:id="@+id/btn_apply"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_below="@id/hospitalName2"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/btn_background"
-        android:clickable="false"
-        android:text=""
-        android:textColor="@color/white"
-        android:textSize="15sp"
-        tools:visibility="visible" />
 
-    <ProgressBar
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:max="100"/>
-
-</LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

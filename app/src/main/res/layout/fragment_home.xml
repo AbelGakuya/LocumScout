@@ -1,86 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical"
-    android:padding="10dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.shift_listing_fragments.HomeFragment">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white">
 
-    <!-- TODO: Update blank fragment layout -->
-
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/profile_layout"
-            android:padding="10dp"
-            >
-
-            <TextView
-                android:id="@+id/hello"
-                android:text="Welcome"
-                android:layout_width="wrap_content"
-                android:layout_marginTop="15dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:padding="10dp"
-                android:layout_toEndOf="@id/profile_image"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:textSize="20sp"/>
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/profile_image"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_alignParentTop="true"
-                android:scaleType="centerCrop"
-                android:layout_alignParentStart="true"
-                app:civ_border_width="2dp"
-
-                 />
-
-            <ImageView
-                android:id="@+id/notifications"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:src="@drawable/ic_notifications"
-                android:layout_marginStart="280dp"
-                android:contentDescription="TODO" />
-
-            <TextView
-                android:id="@+id/notification_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/notification_icon_background"
-                android:gravity="center"
-                android:text="0"
-                android:textColor="#FFFFFF"
-                android:textSize="14sp"
-                android:padding="6dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginStart="300dp"
-                android:layout_gravity ="end"
-                android:layout_marginBottom="8dp"
-                android:visibility="visible"/>
-
-        </RelativeLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/shift_locums_list"
+    <!-- Profile Layout -->
+    <RelativeLayout
+        android:id="@+id/profile_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        tools:listitem="@layout/shift_locums" />
+        android:padding="10dp">
 
+        <!-- Welcome Text -->
+        <TextView
+            android:id="@+id/hello"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Welcome"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:padding="10dp"
+            android:layout_toEndOf="@id/profile_image" />
 
-</LinearLayout>
+        <!-- Profile Image -->
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:scaleType="centerCrop"
+            app:civ_border_width="2dp" />
+
+        <!-- Notifications Icon -->
+        <ImageView
+            android:id="@+id/notifications"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_notifications"
+            android:layout_marginStart="280dp"
+            android:contentDescription="TODO" />
+
+        <!-- Notification Count -->
+        <TextView
+            android:id="@+id/notification_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/notification_icon_background"
+            android:gravity="center"
+            android:text="0"
+            android:textSize="14sp"
+            android:textColor="#FFFFFF"
+            android:padding="6dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="300dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="visible" />
+
+    </RelativeLayout>
+
+    <!-- RecyclerView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/shift_locums_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:layout_below="@id/profile_layout"
+        tools:listitem="@layout/shift_locums"/>
+
+</RelativeLayout>
+
 
     <!--            android:adjustViewBounds="true"-->
     <!--            android:src="@drawable/baseline_account_circle_24"-->
