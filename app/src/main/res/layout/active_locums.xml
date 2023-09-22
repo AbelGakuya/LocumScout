@@ -19,11 +19,17 @@
         android:id="@+id/hospital_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         android:textSize="14sp"
         android:textColor="@color/black"
         android:text="Message"/>
 
+    <TextView
+        android:id="@+id/start_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="@color/black"
+        android:text="00:00"/>
     <TextView
         android:id="@+id/end_date"
         android:layout_width="wrap_content"

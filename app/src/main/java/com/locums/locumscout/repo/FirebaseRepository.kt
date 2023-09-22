@@ -22,10 +22,12 @@ class FirebaseRepository {
                 val imageUrl = hospitalSnapshot.getString("imageUrl")
                 val uid = hospitalSnapshot.getString("hospitalId")
                 val title = hospitalSnapshot.getString("jobTitle")
+                val vacancyId = hospitalSnapshot.getString("vacancyId")
                 val endDate = hospitalSnapshot.getTimestamp("endDate")?.toDate()
+                val startDate = hospitalSnapshot.getTimestamp("startDate")?.toDate()
 
 
-                data.add(Hospital(hospitalName,title,imageUrl,uid,endDate))
+                data.add(Hospital(hospitalName,title,imageUrl,uid,vacancyId,endDate,startDate))
             }
         } catch (e: Exception){
 //            withContext(Dispatchers.Main) {
@@ -48,8 +50,9 @@ class FirebaseRepository {
                 val applicantName = locumSnapshot.getString("applicant_name")
                 val hospitalName = locumSnapshot.getString("hospital_name")
                 val endDate = locumSnapshot.getDate("end_date")
+                val startDate = locumSnapshot.getDate("start_date")
 
-                data.add(ActiveLocum(applicantName,hospitalName,endDate))
+                data.add(ActiveLocum(applicantName,hospitalName,startDate,endDate))
             }
         } catch (e: Exception){
 //            withContext(Dispatchers.Main) {
@@ -72,6 +75,7 @@ class FirebaseRepository {
                 val applicantName = locumSnapshot.getString("applicant_name")
                 val hospitalName = locumSnapshot.getString("hospital_name")
                 val endDate = locumSnapshot.getDate("end_date")
+
 
                 data.add(CompletedLocum(applicantName,hospitalName,endDate))
             }

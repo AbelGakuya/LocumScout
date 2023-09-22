@@ -14,6 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.locums.locumscout.R
 import com.locums.locumscout.databinding.FragmentNotificationsDetailsBinding
 import com.locums.locumscout.other.Constants.endDate
+import com.locums.locumscout.other.Constants.hospitalId
 import com.locums.locumscout.viewModels.SharedNotificationsViewModel
 
 class NotificationsDetailsFragment : Fragment() {
@@ -29,32 +30,36 @@ class NotificationsDetailsFragment : Fragment() {
         binding = FragmentNotificationsDetailsBinding.inflate(inflater,container,false)
         val view = binding.root
 
-        val hospitalId = activity?.intent?.getStringExtra("hospitalId")
+        val notificationMessage = activity?.intent?.getStringExtra("notificationMessage")
+        val notificationTitle = activity?.intent?.getStringExtra("notificationTitle")
 
-        val applicantId = FirebaseAuth.getInstance().currentUser?.uid
+        binding.txt.text = notificationTitle
+        binding.txt1.text = notificationMessage
 
-        val db = FirebaseFirestore.getInstance()
-
-        db.collection("applications")
-            .whereEqualTo("Applicant's_uid", applicantId)
-            .whereEqualTo("hospitalId", hospitalId)
-            .get()
-            .addOnSuccessListener {
-                    querySnapshot ->
-                for (document in querySnapshot.documents){
-                    val applicantId = document.getString("Applicants_name")
-                    val hospitalId = document.getString("hospitalId")
-
-
-                    binding.txt.text = hospitalId
+//        val applicantId = FirebaseAuth.getInstance().currentUser?.uid
 //
-                    binding.txt1.text = applicantId
-                }
-            }
-            .addOnFailureListener {
-                    exception ->
-                Log.e("Firestore","Error getting documents: ${exception.message}")
-            }
+//        val db = FirebaseFirestore.getInstance()
+//
+//        db.collection("applications")
+//            .whereEqualTo("Applicant's_uid", applicantId)
+//            .whereEqualTo("hospitalId", hospitalId)
+//            .get()
+//            .addOnSuccessListener {
+//                    querySnapshot ->
+//                for (document in querySnapshot.documents){
+//                    val applicantId = document.getString("Applicants_name")
+//                    val hospitalId = document.getString("hospitalId")
+//
+//
+//                    binding.txt.text = hospitalId
+////
+//                    binding.txt1.text = applicantId
+//                }
+//            }
+//            .addOnFailureListener {
+//                    exception ->
+//                Log.e("Firestore","Error getting documents: ${exception.message}")
+//            }
 
 
         return view
@@ -66,6 +71,9 @@ class NotificationsDetailsFragment : Fragment() {
         sharedViewModel2.content.observe(viewLifecycleOwner, {
                 content ->
             val notificationId = content.notificationId
+            binding.txt.text = content.title
+            binding.txt1.text = content.message
+
             markNotificationAsRead(notificationId)
 
         })
@@ -100,11 +108,6 @@ class NotificationsDetailsFragment : Fragment() {
                         }
                 }
             }
-
-
-
-
-
 
     }
 

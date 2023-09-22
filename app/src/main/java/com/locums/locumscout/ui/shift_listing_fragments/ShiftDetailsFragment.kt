@@ -31,6 +31,8 @@ import com.locums.locumscout.other.Constants.endDate
 import com.locums.locumscout.other.Constants.hospitalId
 import com.locums.locumscout.other.Constants.name
 import com.locums.locumscout.other.Constants.resumeDownloadUrl
+import com.locums.locumscout.other.Constants.startDate
+import com.locums.locumscout.other.Constants.vacancyId
 import com.locums.locumscout.retrofit.RetrofitInstance
 import com.locums.locumscout.viewModels.SharedViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -72,6 +74,8 @@ class ShiftDetailsFragment : Fragment() {
         sharedViewModel2.content.observe(viewLifecycleOwner, {
                 content ->
             hospitalId = content.uid
+            vacancyId = content.vacancyId
+            startDate = content.startDate.toString()
             endDate = content.endDate.toString()
             binding.hospitalName.text = content.hospitalName
             binding.jobTitle.text = content.title
@@ -277,6 +281,7 @@ class ShiftDetailsFragment : Fragment() {
                 "Applicant's_uid" to uid,
                 "Applicants coverLetter" to coverLetterDownloadUrl,
                 "Applicant's resume" to resumeDownloadUrl,
+                "vacancyId" to vacancyId,
                 "hospitalId" to hospitalId)
 
                     val userRef = auth.currentUser?.uid?.let {
@@ -315,7 +320,8 @@ class ShiftDetailsFragment : Fragment() {
                         val applicantId = auth.currentUser?.uid
 
                         PushNotification(
-                            NotificationData(title, message,applicantId,hospitalId,endDate),
+                            NotificationData(title, message,applicantId,hospitalId,
+                                vacancyId,startDate,endDate),
                             fcmToken
                         ).also {
                             sendNotification(it)

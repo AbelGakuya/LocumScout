@@ -26,7 +26,17 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+//            buildConfigField("String",
+//                "FCM_SERVER_KEY",
+//                "\"AAAAqsaAwzM:APA91bHh43O6I5gmke4lmMn1Gzi6MLaANCM4aIR1A8Vgw_bCEemd_s9AcFfE6699dsDzDxapedp5QaUCNVjiJFgvizIXU_AqiR07UOANGJGDl2N_AqJUj3b45WdjEd3XPoc-zFgE1FUi\"")
+
         }
+
+//        debug {
+//            buildConfigField("String",
+//                "FCM_SERVER_KEY",
+//                "\"AAAAqsaAwzM:APA91bHh43O6I5gmke4lmMn1Gzi6MLaANCM4aIR1A8Vgw_bCEemd_s9AcFfE6699dsDzDxapedp5QaUCNVjiJFgvizIXU_AqiR07UOANGJGDl2N_AqJUj3b45WdjEd3XPoc-zFgE1FUi\"")
+//        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8

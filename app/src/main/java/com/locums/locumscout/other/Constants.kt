@@ -9,7 +9,9 @@ object Constants {
     var resumeDownloadUrl = ""
     var coverLetterDownloadUrl = ""
     var hospitalId : String? = ""
+    var vacancyId : String? = ""
     var endDate: String? = null
+    var startDate: String? = null
     const val ACTION_SHOW_APPLICANTS_DETAIL_FRAGMENT="ACTION_SHOW_APPLICANTS_DETAIL_FRAGMENT"
 
 }

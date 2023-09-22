@@ -8,5 +8,7 @@ data class Hospital(
     val title: String?,
     val imageUrl: String?,
     val uid: String?,
-    val endDate: Date?
+    val vacancyId: String?,
+    val endDate: Date?,
+    val startDate: Date?
 )

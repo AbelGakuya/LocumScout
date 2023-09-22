@@ -53,6 +53,7 @@ class ActiveLocumsAdapter(
 
             binding.applicantName.text = item.applicant_name
             binding.hospitalName.text = item.hospital_name
+            binding.startDate.text = item.start_date.toString()
             binding.endDate.text = item.end_date.toString()
 
             binding.root.setOnClickListener { onItemClick(item) }

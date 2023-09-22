@@ -65,7 +65,8 @@ class MyFirebaseMessagingService :
 
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("notificationType", "doctorDetails")
-        intent.putExtra("hospitalId", hospitalId)
+        intent.putExtra("notificationTitle", notificationTitle)
+        intent.putExtra("notificationMessage", notificationMessage)
 
         intent.action = ACTION_SHOW_APPLICANTS_DETAIL_FRAGMENT
 
