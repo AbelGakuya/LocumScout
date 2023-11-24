@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.locums.locumscout.other.Constants.ACTION_SHOW_APPLICANTS_DETAIL_FRAGMENT
@@ -41,38 +42,48 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
 
 
-     //   bottomNavigationView.setupWithNavController(navHostFragment.findNavController())
+        bottomNavigationView.setupWithNavController(navHostFragment.findNavController())
 
         bottomNavigationView.setOnNavigationItemReselectedListener { /* No Operation*/ }
-
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.homeFragment -> {
-                    // Handle home action
-                    loadFragment(HomeFragment())
-                    true
-                }
-                R.id.shiftListFragment -> {
+            if(item.itemId == bottomNavigationView.selectedItemId) {
+                when (item.itemId) {
+                    R.id.homeFragment -> {
+                        // Handle home action
+                        // Manually navigate to the home fragment
+                        navController.navigate(R.id.homeFragment)
 
-                    // Handle dashboard action
-                    loadFragment(ShiftListFragment())
-                    true
+                        true
+                    }
+
+                    R.id.shiftListFragment -> {
+
+                        // Handle dashboard action
+                        navController.navigate(R.id.shiftListFragment)
+                        true
+                    }
+
+                    R.id.ordersFragment -> {
+                        // Handle notifications action
+                        // Manually navigate to the home fragment
+                        navController.navigate(R.id.ordersFragment)
+                        true
+                    }
+
+                    R.id.userProfileFragment -> {
+                        // Manually navigate to the home fragment
+                        navController.navigate(R.id.userProfileFragment)
+                        true
+                    }
                 }
-                R.id.ordersFragment -> {
-                    // Handle notifications action
-                    loadFragment(OrdersFragment())
-                    true
-                }
-                
-                R.id.userProfileFragment -> {
-                    loadFragment(UserProfileFragment())
-                    true
-                }
-                else -> false
+            } else {
+                // Item not reselected, handle normal navigation
+                NavigationUI.onNavDestinationSelected(item, navController)
             }
+            true
         }
 
-        loadFragment(HomeFragment())
+        //loadFragment(HomeFragment())
         navHostFragment.findNavController()
             .addOnDestinationChangedListener{
                     _,destination,_ ->
@@ -91,7 +102,6 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.navHostFragment,fragment)
             .commit()
-
     }
 
     private fun navigateToSplash() {

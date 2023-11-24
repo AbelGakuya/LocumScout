@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.core.view.get
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
@@ -35,6 +36,7 @@ import com.locums.locumscout.other.Constants.first_name
 import com.locums.locumscout.other.Constants.last_name
 import com.locums.locumscout.other.Constants.name
 import com.locums.locumscout.repo.FirebaseRepository
+import com.locums.locumscout.ui.notifications_fragment.NotificationsFragment
 import com.locums.locumscout.viewModels.FirebaseViewModel
 import com.locums.locumscout.viewModels.ShiftsViewModel
 import com.locums.locumscout.viewModels.ShiftsViewModelFactory
@@ -175,6 +177,7 @@ class HomeFragment : Fragment() {
 
         binding.notifications.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_notificationsFragment)
+
         }
 
         retrieveFCMToken()
