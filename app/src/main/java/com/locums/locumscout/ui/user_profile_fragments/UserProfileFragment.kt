@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.auth.FirebaseAuth
@@ -62,12 +63,25 @@ class UserProfileFragment : Fragment() {
                         .into(binding.profileImage)
 
                     Constants.name = profileData.name
-
                     binding.userName.text = "${profileData.name}"
-
                 }
             })
         }
+
+
+        binding.logOutCard.setOnClickListener {
+            logOut()
+            navigateToLogin()
+        }
+    }
+
+    private fun navigateToLogin() {
+        findNavController().navigate(R.id.action_userProfileFragment_to_loginFragment)
+        findNavController().popBackStack(R.id.loginFragment,false)
+    }
+
+    private fun logOut() {
+        FirebaseAuth.getInstance().signOut()
     }
 
     override fun onDestroy() {

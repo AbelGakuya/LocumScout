@@ -72,6 +72,10 @@ dependencies {
 
     implementation("androidx.recyclerview:recyclerview:1.3.1")
 
+    //Material library
+    implementation ("com.google.android.material:material:1.4.0")
+
+
     // Navigation Components
     implementation("androidx.navigation:navigation-fragment-ktx:2.5.3")
     implementation("androidx.navigation:navigation-ui-ktx:2.5.3")

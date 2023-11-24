@@ -3,10 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/splashFragment">
 
     <action android:id="@+id/action_global_notifications_details_Fragment"
         app:destination="@+id/notificationsDetailsFragment"
+        app:launchSingleTop="true"/>
+
+    <action android:id="@+id/action_global_splash_Fragment"
+        app:destination="@+id/splashFragment"
         app:launchSingleTop="true"/>
 
     <fragment
@@ -16,13 +20,19 @@
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_homeFragment_to_shiftListFragment"
-            app:destination="@id/shiftListFragment" />
+            app:destination="@id/shiftListFragment"
+            app:popUpToInclusive="true"
+            app:popUpTo="@+id/homeFragment"/>
         <action
             android:id="@+id/action_homeFragment_to_userProfileFragment"
-            app:destination="@id/userProfileFragment" />
+            app:destination="@id/userProfileFragment"
+            app:popUpToInclusive="true"
+            app:popUpTo="@+id/homeFragment"/>
         <action
             android:id="@+id/action_homeFragment_to_notificationsFragment"
-            app:destination="@id/notificationsFragment" />
+            app:destination="@id/notificationsFragment"
+            app:popUpToInclusive="true"
+            app:popUpTo="@+id/homeFragment"/>
     </fragment>
 
     <fragment
@@ -32,7 +42,9 @@
         tools:layout="@layout/fragment_login" >
         <action
             android:id="@+id/action_loginFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_loginFragment_to_registrationFragment"
             app:destination="@id/registrationFragment" />
@@ -45,7 +57,9 @@
         tools:layout="@layout/fragment_registration" >
         <action
             android:id="@+id/action_registrationFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/registrationFragment"
+            app:popUpToInclusive="true"/>
     </fragment>
     <fragment
         android:id="@+id/shiftListFragment"
@@ -56,7 +70,7 @@
             android:id="@+id/action_shiftListFragment_to_shiftDetailsFragment"
             app:destination="@id/shiftDetailsFragment"
             app:popUpTo="@id/shiftListFragment"
-            app:popUpToInclusive="false" />
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -81,6 +95,9 @@
         <action
             android:id="@+id/action_userProfileFragment_to_homeFragment2"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_userProfileFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/userShiftsFragment"
@@ -99,10 +116,13 @@
         tools:layout="@layout/fragment_notifications" >
         <action
             android:id="@+id/action_notificationsFragment_to_locumFragment"
-            app:destination="@id/locumFragment" />
+            app:destination="@id/locumFragment"
+            app:popUpTo="@id/notificationsFragment"
+            app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_notificationsFragment_to_notificationsDetailsFragment"
-            app:destination="@id/notificationsDetailsFragment" />
+            app:destination="@id/notificationsDetailsFragment"
+            />
     </fragment>
     <fragment
         android:id="@+id/locumFragment"
@@ -119,4 +139,25 @@
         android:name="com.locums.locumscout.ui.shift_listing_fragments.OrdersFragment"
         android:label="fragment_orders"
         tools:layout="@layout/fragment_orders" />
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.locums.locumscout.ui.authenticationfragments.SplashFragment"
+        android:label="fragment_splash"
+        tools:layout="@layout/fragment_splash" >
+        <action
+            android:id="@+id/action_splashFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpToInclusive="true"
+            app:popUpTo="@+id/splashFragment"/>
+        <action
+            android:id="@+id/action_splashFragment_to_notificationsDetailsFragment"
+            app:destination="@id/notificationsDetailsFragment"
+            app:popUpToInclusive="true"
+            app:popUpTo="@+id/splashFragment"/>
+        <action
+            android:id="@+id/action_splashFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpToInclusive="true"
+            app:popUpTo="@+id/splashFragment"/>
+    </fragment>
 </navigation>

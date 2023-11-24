@@ -71,10 +71,11 @@ class RegistrationFragment : Fragment() {
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     auth.createUserWithEmailAndPassword(email, password).await()
-                    updateProfile1()
-//                    withContext(Dispatchers.Main){
-//                        checkLoggedInState()
-//                    }
+                   // updateProfile1()
+                    uploadImageToFirebase()
+                    withContext(Dispatchers.Main){
+                        checkLoggedInState()
+                    }
 
                 } catch (e:Exception){
                     withContext(Dispatchers.Main){
@@ -150,25 +151,19 @@ class RegistrationFragment : Fragment() {
             try {
                 val uid = auth.currentUser?.uid
                 if (uid != null){
-
                     databaseReference.child(uid).setValue(doctor).await()
                     uploadImageToFirebase()
                    // uploadImage()
                     withContext(Dispatchers.Main){
                         checkLoggedInState()
                     }
-
-
                 }
-
             } catch (e:Exception){
-
                 withContext(Dispatchers.Main){
                     Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
-
     }
 
     private fun uploadImage() {
@@ -187,8 +182,7 @@ class RegistrationFragment : Fragment() {
                     }
                 }
 
-
-                //  val downloadUri: Task<Uri> = storageReference.downloadUrl
+        //  val downloadUri: Task<Uri> = storageReference.downloadUrl
                 /*    if (uid != null) {
                         databaseReference.child(uid).child("imageUrl").setValue("/images/$filename")
                     }*/
@@ -196,9 +190,6 @@ class RegistrationFragment : Fragment() {
 //            hideProgressBar()
                 Toast.makeText(context,"Failed to update profile", Toast.LENGTH_SHORT).show()
             }
-
-
-
     }
 
 
@@ -206,20 +197,21 @@ class RegistrationFragment : Fragment() {
         val firstName = binding.firstName.text.trim().toString()
         val lastName = binding.lastName.text.trim().toString()
         val username = firstName + " " + lastName
-        val storageRef = FirebaseStorage.getInstance().reference.child("user_images/${auth.currentUser?.uid}.jpg")
-        storageRef.putFile(filePath).await()
-        val imageUrl = storageRef.downloadUrl.await().toString()
-
-        //store user data in Firestore using coroutines
-        val userMap = mapOf("name" to username, "imageUrl" to imageUrl)
         withContext(Dispatchers.IO){
+            val storageRef = FirebaseStorage.getInstance().reference.child("user_images/${auth.currentUser?.uid}.jpg")
+            storageRef.putFile(filePath).await()
+            val imageUrl = storageRef.downloadUrl.await().toString()
+
+            //store user data in Firestore using coroutines
+            val userMap = mapOf("name" to username, "imageUrl" to imageUrl)
             val userRef = auth.currentUser?.uid?.let {
                 FirebaseFirestore.getInstance()
                     .collection("doctor_users")
                     .document(it)
             }
-
             userRef?.set(userMap)?.await() ?: ""
+
+
         }
     }
 
