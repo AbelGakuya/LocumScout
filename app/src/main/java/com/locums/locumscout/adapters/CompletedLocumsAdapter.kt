@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.locums.locumscout.data.ActiveLocum
 import com.locums.locumscout.data.CompletedLocum
 import com.locums.locumscout.databinding.ActiveLocumsBinding
+import com.locums.locumscout.databinding.CompletedLocumsBinding
 import com.locums.locumscouth.adapters.ActiveLocumsAdapter
 
 class CompletedLocumsAdapter(private val onItemClick:(CompletedLocum) -> Unit)
@@ -19,7 +20,7 @@ class CompletedLocumsAdapter(private val onItemClick:(CompletedLocum) -> Unit)
     ): CompletedLocumsAdapter.CompletedLocumsViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
 
-        val binding = ActiveLocumsBinding.inflate(layoutInflater,parent,false)
+        val binding = CompletedLocumsBinding.inflate(layoutInflater,parent,false)
 
         return CompletedLocumsViewHolder(binding)
     }
@@ -43,7 +44,7 @@ class CompletedLocumsAdapter(private val onItemClick:(CompletedLocum) -> Unit)
         notifyDataSetChanged()
     }
 
-    inner class CompletedLocumsViewHolder(val binding: ActiveLocumsBinding):
+    inner class CompletedLocumsViewHolder(val binding: CompletedLocumsBinding):
         RecyclerView.ViewHolder(binding.root){
 
         fun bind(item: CompletedLocum){

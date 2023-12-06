@@ -3,6 +3,7 @@ package com.locums.locumscout
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toolbar
 import androidx.fragment.app.Fragment
@@ -26,20 +27,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
 
-//        if (intent.action != null){
-//            navigateToDoctorDetailsIfneeded(intent)
-//        } else {
-//            navigateToSplash()
-//        }
 
-//        val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
-      //  setSupportActionBar(toolbar)
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView) as BottomNavigationView
 
         val navController = findNavController(R.id.navHostFragment)
         bottomNavigationView.setupWithNavController(navController)
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
+
 
 
         bottomNavigationView.setupWithNavController(navHostFragment.findNavController())
@@ -52,7 +47,6 @@ class MainActivity : AppCompatActivity() {
                         // Handle home action
                         // Manually navigate to the home fragment
                         navController.navigate(R.id.homeFragment)
-
                         true
                     }
 
@@ -82,6 +76,11 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            Log.d("Navigation", "Current Destination: ${destination.label}")
+        }
+
 
         //loadFragment(HomeFragment())
         navHostFragment.findNavController()
@@ -113,6 +112,12 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
         if (intent?.action == ACTION_SHOW_APPLICANTS_DETAIL_FRAGMENT){
             navHostFragment.findNavController().navigate(R.id.action_global_notifications_details_Fragment)
+        }
+    }
+
+    override fun onBackPressed() {
+        if (!findNavController(R.id.navHostFragment).navigateUp()) {
+            super.onBackPressed()
         }
     }
 }

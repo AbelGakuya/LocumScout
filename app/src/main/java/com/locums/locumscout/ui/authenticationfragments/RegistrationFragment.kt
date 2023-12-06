@@ -21,6 +21,7 @@ import com.google.firebase.storage.StorageReference
 import com.locums.locumscout.R
 import com.locums.locumscout.data.Doctor
 import com.locums.locumscout.databinding.FragmentRegistrationBinding
+import com.locums.locumscout.other.LoadingDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -39,6 +40,7 @@ class RegistrationFragment : Fragment() {
     private lateinit var filePath: Uri
     private val PICK_IMAGE_REQUEST = 22
 
+    private lateinit var loadingDialog: LoadingDialog
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -53,6 +55,7 @@ class RegistrationFragment : Fragment() {
         databaseReference = FirebaseDatabase.getInstance().getReference("doctors")
 
 
+        loadingDialog = LoadingDialog(requireActivity())
         binding.btnRegister.setOnClickListener {
             registerUser()
             //findNavController().navigate(R.id.action_registrationFragment_to_homeFragment)
@@ -67,14 +70,20 @@ class RegistrationFragment : Fragment() {
     private fun registerUser(){
         val email = binding.edtEmail.text.trim().toString()
         val password = binding.edtPassword.text.trim().toString()
+        val firstName = binding.firstName.text.trim().toString()
+        val lastName = binding.lastName.text.trim().toString()
+        val username = firstName + " " + lastName
         if (email.isNotEmpty() && password.isNotEmpty()){
+            loadingDialog.startLoadingDialog()
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     auth.createUserWithEmailAndPassword(email, password).await()
                    // updateProfile1()
-                    uploadImageToFirebase()
+                    uploadImageToFirebase(username)
                     withContext(Dispatchers.Main){
-                        checkLoggedInState()
+                       // checkLoggedInState()
+                        loadingDialog.dismissDialog()
+                        findNavController().navigate(R.id.action_registrationFragment_to_homeFragment)
                     }
 
                 } catch (e:Exception){
@@ -83,125 +92,16 @@ class RegistrationFragment : Fragment() {
                     }
                 }
             }
-        }
-    }
-
-
-    private fun checkLoggedInState(){
-        if (auth.currentUser == null){
-            Toast.makeText(requireContext(), "You are not logged in", Toast.LENGTH_SHORT).show()
         } else {
-            findNavController().navigate(R.id.action_registrationFragment_to_homeFragment)
+            Toast.makeText(requireContext(), "Please fill the required fields", Toast.LENGTH_LONG).show()
         }
     }
 
-    private fun updateProfile(){
-        auth.currentUser?.let {user->
-            val firstName = binding.firstName.text.trim().toString()
-            val lastName = binding.lastName.text.trim().toString()
-            val username = firstName + " " + lastName
-
-            val photoUri = filePath
-            val profileUpdates = UserProfileChangeRequest.Builder()
-                .setDisplayName(username)
-                .setPhotoUri(photoUri)
-                .build()
-
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    user.updateProfile(profileUpdates).await()
-
-                    // Save additional data to Firestore
-                    val userId = user.uid
-                    val userData = hashMapOf(
-                        "username" to username,
-                        "profilePictureUrl" to photoUri.toString()
-                    )
-                    val firestore = FirebaseFirestore.getInstance()
-                    firestore.collection("users").document(userId).set(userData).await()
-
-                    withContext(Dispatchers.Main){
-                        Toast.makeText(requireContext(), "Successfully updated profile", Toast.LENGTH_SHORT).show()
-                    }
-
-                } catch (e: Exception){
-                    withContext(Dispatchers.Main){
-                        Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-        }
-    }
-
-    //getting user's details to add them to firebase database
-    private fun updateProfile1(){
-        auth.currentUser?.let {user->
-            val uid = auth.currentUser!!.uid
-            val firstName = binding.firstName.text.trim().toString()
-            val lastName = binding.lastName.text.trim().toString()
-            val username = firstName + " " + lastName
-            val doctor = Doctor(firstName, lastName,username,uid)
-            addToDatabase(doctor)
-
-        }
-    }
-
-    private fun addToDatabase(doctor: Doctor) {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val uid = auth.currentUser?.uid
-                if (uid != null){
-                    databaseReference.child(uid).setValue(doctor).await()
-                    uploadImageToFirebase()
-                   // uploadImage()
-                    withContext(Dispatchers.Main){
-                        checkLoggedInState()
-                    }
-                }
-            } catch (e:Exception){
-                withContext(Dispatchers.Main){
-                    Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-    }
-
-    private fun uploadImage() {
-        val  uid = auth.currentUser?.uid
-        val filename = UUID.randomUUID().toString()
-        storageReference = FirebaseStorage.getInstance().getReference("/images/$filename")
-        storageReference.putFile(filePath).addOnSuccessListener {
-//            hideProgressBar()
-
-                Toast.makeText(context, "Profile Successfully Updated", Toast.LENGTH_SHORT).show()
-
-                storageReference.downloadUrl.addOnSuccessListener {
-                    it.toString()
-                    if (uid != null) {
-                        databaseReference.child(uid).child("imageUrl").setValue(it.toString())
-                    }
-                }
-
-        //  val downloadUri: Task<Uri> = storageReference.downloadUrl
-                /*    if (uid != null) {
-                        databaseReference.child(uid).child("imageUrl").setValue("/images/$filename")
-                    }*/
-            }.addOnFailureListener{
-//            hideProgressBar()
-                Toast.makeText(context,"Failed to update profile", Toast.LENGTH_SHORT).show()
-            }
-    }
-
-
-    private suspend fun uploadImageToFirebase(){
-        val firstName = binding.firstName.text.trim().toString()
-        val lastName = binding.lastName.text.trim().toString()
-        val username = firstName + " " + lastName
+    private suspend fun uploadImageToFirebase(username: String) {
         withContext(Dispatchers.IO){
             val storageRef = FirebaseStorage.getInstance().reference.child("user_images/${auth.currentUser?.uid}.jpg")
             storageRef.putFile(filePath).await()
             val imageUrl = storageRef.downloadUrl.await().toString()
-
             //store user data in Firestore using coroutines
             val userMap = mapOf("name" to username, "imageUrl" to imageUrl)
             val userRef = auth.currentUser?.uid?.let {
@@ -210,8 +110,6 @@ class RegistrationFragment : Fragment() {
                     .document(it)
             }
             userRef?.set(userMap)?.await() ?: ""
-
-
         }
     }
 
@@ -260,6 +158,114 @@ class RegistrationFragment : Fragment() {
             }
         }
     }
+
+//    private fun checkLoggedInState(){
+//        if (auth.currentUser == null){
+//            Toast.makeText(requireContext(), "You are not logged in", Toast.LENGTH_SHORT).show()
+//        } else {
+//            findNavController().navigate(R.id.action_registrationFragment_to_homeFragment)
+//        }
+//    }
+//
+//    private fun updateProfile(){
+//        auth.currentUser?.let {user->
+//            val firstName = binding.firstName.text.trim().toString()
+//            val lastName = binding.lastName.text.trim().toString()
+//            val username = firstName + " " + lastName
+//
+//            val photoUri = filePath
+//            val profileUpdates = UserProfileChangeRequest.Builder()
+//                .setDisplayName(username)
+//                .setPhotoUri(photoUri)
+//                .build()
+//
+//            CoroutineScope(Dispatchers.IO).launch {
+//                try {
+//                    user.updateProfile(profileUpdates).await()
+//
+//                    // Save additional data to Firestore
+//                    val userId = user.uid
+//                    val userData = hashMapOf(
+//                        "username" to username,
+//                        "profilePictureUrl" to photoUri.toString()
+//                    )
+//                    val firestore = FirebaseFirestore.getInstance()
+//                    firestore.collection("users").document(userId).set(userData).await()
+//
+//                    withContext(Dispatchers.Main){
+//                        Toast.makeText(requireContext(), "Successfully updated profile", Toast.LENGTH_SHORT).show()
+//                    }
+//
+//                } catch (e: Exception){
+//                    withContext(Dispatchers.Main){
+//                        Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
+//                    }
+//                }
+//            }
+//        }
+//    }
+
+    //getting user's details to add them to firebase database
+//    private fun updateProfile1(){
+//        auth.currentUser?.let {user->
+//            val uid = auth.currentUser!!.uid
+//            val firstName = binding.firstName.text.trim().toString()
+//            val lastName = binding.lastName.text.trim().toString()
+//            val username = firstName + " " + lastName
+//            val doctor = Doctor(firstName, lastName,username,uid)
+//            addToDatabase(doctor)
+//
+//        }
+//    }
+//
+//    private fun addToDatabase(doctor: Doctor) {
+//        CoroutineScope(Dispatchers.IO).launch {
+//            try {
+//                val uid = auth.currentUser?.uid
+//                if (uid != null){
+//                    databaseReference.child(uid).setValue(doctor).await()
+//                    uploadImageToFirebase(username)
+//                   // uploadImage()
+//                    withContext(Dispatchers.Main){
+//                        checkLoggedInState()
+//                    }
+//                }
+//            } catch (e:Exception){
+//                withContext(Dispatchers.Main){
+//                    Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//        }
+//    }
+
+//    private fun uploadImage() {
+//        val  uid = auth.currentUser?.uid
+//        val filename = UUID.randomUUID().toString()
+//        storageReference = FirebaseStorage.getInstance().getReference("/images/$filename")
+//        storageReference.putFile(filePath).addOnSuccessListener {
+////            hideProgressBar()
+//
+//                Toast.makeText(context, "Profile Successfully Updated", Toast.LENGTH_SHORT).show()
+//
+//                storageReference.downloadUrl.addOnSuccessListener {
+//                    it.toString()
+//                    if (uid != null) {
+//                        databaseReference.child(uid).child("imageUrl").setValue(it.toString())
+//                    }
+//                }
+//
+//        //  val downloadUri: Task<Uri> = storageReference.downloadUrl
+//                /*    if (uid != null) {
+//                        databaseReference.child(uid).child("imageUrl").setValue("/images/$filename")
+//                    }*/
+//            }.addOnFailureListener{
+////            hideProgressBar()
+//                Toast.makeText(context,"Failed to update profile", Toast.LENGTH_SHORT).show()
+//            }
+//    }
+
+
+
 
 
 }

@@ -72,7 +72,16 @@
         app:layout_constraintTop_toBottomOf="@id/flFragment"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:itemBackground="@color/white"
+        app:itemIconTint="@color/black"
+        app:itemTextColor="@color/black"
+        app:itemIconSize="24dp"
+        app:labelVisibilityMode="unlabeled"
+        android:elevation="8dp"
+        app:itemPadding="8dp"
+
+        />
 <!--    app:menu="@menu/bottom_nav_menu"-->
 
 

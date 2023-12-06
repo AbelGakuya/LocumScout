@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.locums.locumscout.R
 import com.locums.locumscout.databinding.FragmentLoginBinding
+import com.locums.locumscout.other.LoadingDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,6 +22,8 @@ class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
     lateinit var auth: FirebaseAuth
 
+    private lateinit var loadingDialog: LoadingDialog
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,6 +34,7 @@ class LoginFragment : Fragment() {
         val view = binding.root
 
         auth = FirebaseAuth.getInstance()
+        loadingDialog = LoadingDialog(requireActivity())
 
         binding.btnLogin.setOnClickListener {
             loginUser()
@@ -52,10 +56,12 @@ class LoginFragment : Fragment() {
         val email = binding.edtEmail.text.trim().toString()
         val password = binding.edtPassword.text.trim().toString()
         if (email.isNotEmpty() && password.isNotEmpty()){
+            loadingDialog.startLoadingDialog()
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     auth.signInWithEmailAndPassword(email, password).await()
                     withContext(Dispatchers.Main){
+                        loadingDialog.dismissDialog()
                         checkLoggedInState()
                     }
 
