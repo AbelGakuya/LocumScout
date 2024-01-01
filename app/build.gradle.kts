@@ -13,9 +13,8 @@ android {
         applicationId = "com.locums.locumscout"
         minSdk = 24
         targetSdk = 33
-        versionCode = 1
-        versionName = "1.0"
-
+        versionCode = 2 // Update the version code to a unique integer
+        versionName = "1.1" // Update the version name to reflect the new version
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
